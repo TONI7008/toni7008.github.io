@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Newton Solver | Advanced Root-Finding Workbench</title>
+  <!-- Google Fonts + KaTeX + math.js + Chart.js -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.0.0/math.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* CSS custom properties for dynamic theming */
+    :root {
+      --bg-body: #0e0e0e;
+      --bg-panel: #131313;
+      --bg-elevated: #1a1a1a;
+      --border-subtle: rgba(255, 255, 255, 0.05);
+      --border-strong: rgba(255, 255, 255, 0.1);
+      --text-primary: #ffffff;
+      --text-secondary: #adaaaa;
+      --text-muted: #484847;
+      --accent-cyan: #81ecff;
+      --accent-cyan-glow: rgba(129, 236, 255, 0.08);
+      --accent-blue: #6e9bff;
+      --accent-purple: #a68cff;
+      --danger: #ff716c;
+      --warning: #f5d06a;
+      --badge-bg-cyan: rgba(129, 236, 255, 0.12);
+      --badge-bg-proc: rgba(110, 155, 255, 0.12);
+      --shadow-cyan: rgba(129, 236, 255, 0.2);
+      --blob-1: rgba(129, 236, 255, 0.06);
+      --blob-2: rgba(110, 155, 255, 0.07);
+      --transition: all 0.2s ease;
+    }
+
+    body.light {
+      --bg-body: #f5f7fb;
+      --bg-panel: #ffffff;
+      --bg-elevated: #f0f2f5;
+      --border-subtle: rgba(0, 0, 0, 0.08);
+      --border-strong: rgba(0, 0, 0, 0.12);
+      --text-primary: #11181c;
+      --text-secondary: #5a6874;
+      --text-muted: #8a99a8;
+      --accent-cyan: #0f6b7c;
+      --accent-cyan-glow: rgba(15, 107, 124, 0.05);
+      --accent-blue: #2c5f8a;
+      --accent-purple: #7c5cbf;
+      --danger: #c2412c;
+      --warning: #b45309;
+      --badge-bg-cyan: rgba(15, 107, 124, 0.1);
+      --badge-bg-proc: rgba(44, 95, 138, 0.08);
+      --shadow-cyan: rgba(15, 107, 124, 0.25);
+      --blob-1: rgba(15, 107, 124, 0.03);
+      --blob-2: rgba(44, 95, 138, 0.04);
+    }
+
+    body {
+      background: var(--bg-body);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      transition: background 0.25s, color 0.2s;
+    }
+
+    /* floating blobs */
+    .bg-blob-1, .bg-blob-2 {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: -1;
+      transition: background 0.3s;
+    }
+    .bg-blob-1 { top: 0; right: 0; width: 500px; height: 500px; background: var(--blob-1); transform: translate(50%, -50%); }
+    .bg-blob-2 { bottom: 0; left: 0; width: 350px; height: 350px; background: var(--blob-2); transform: translate(-50%, 50%); }
+
+    .wrap { max-width: 1300px; margin: 0 auto; padding: 2rem; display: flex; flex-direction: column; gap: 2rem; }
+
+    /* header + toggle row */
+    .top-bar { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; }
+    .hero { display: flex; flex-direction: column; gap: 0.4rem; }
+    .hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; letter-spacing: -0.03em; color: var(--text-primary); line-height: 1; }
+    .hero p { color: var(--text-secondary); font-size: 0.9rem; letter-spacing: 0.05em; max-width: 500px; }
+
+    .theme-toggle {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      border-radius: 3rem;
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.75rem;
+      letter-spacing: 0.02em;
+      backdrop-filter: blur(4px);
+      transition: var(--transition);
+      color: var(--text-secondary);
+    }
+    .theme-toggle:hover { background: var(--border-subtle); transform: scale(0.98); }
+    .theme-icon { font-size: 1.2rem; }
+
+    .badge-global {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 1.2rem;
+      background: var(--bg-elevated);
+      border-left: 3px solid var(--accent-cyan);
+      border-radius: 4px;
+      margin-top: 0.5rem;
+      align-self: flex-start;
+    }
+    .badge-global span:first-child { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-secondary); font-weight: 700; }
+    .badge-global span:last-child { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--accent-cyan); }
+
+    /* main grid */
+    .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+
+    .panel, .graph-panel {
+      background: var(--bg-panel);
+      border-radius: 1rem;
+      padding: 2rem;
+      border: 1px solid var(--border-subtle);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.2s, border 0.2s;
+    }
+    .panel-accent { position: absolute; top: 0; left: 0; width: 100%; height: 3px; }
+    .panel-accent.cyan { background: linear-gradient(90deg, var(--accent-cyan), transparent); }
+    .panel-accent.blue { background: linear-gradient(90deg, var(--accent-blue), transparent); }
+
+    .section-tag { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.5rem; }
+    .section-tag .bar { width: 2rem; height: 3px; background: var(--accent-cyan); border-radius: 2px; }
+    .section-tag .bar.blue { background: var(--accent-blue); }
+    .section-tag span { font-family: 'Space Grotesk', sans-serif; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.3em; font-weight: 700; color: var(--accent-cyan); }
+    .section-tag span.blue { color: var(--accent-blue); }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-secondary); font-weight: 700; }
+    input, input[type="text"], input[type="number"] {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      color: var(--text-primary);
+      padding: 0.9rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      outline: none;
+      width: 100%;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+    input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 0 3px var(--accent-cyan-glow); }
+
+    .katex-display-box {
+      margin-top: 1.5rem;
+      background: var(--accent-cyan-glow);
+      border: 1px solid var(--border-strong);
+      border-radius: 1rem;
+      padding: 1.5rem 2rem;
+      transition: background 0.2s;
+    }
+    .katex-tag { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.25em; color: var(--accent-cyan); font-weight: 700; margin-bottom: 0.25rem; display: block; }
+    .katex-row { display: flex; align-items: center; gap: 0.75rem; min-height: 2rem; }
+    .katex-lbl { font-size: 0.8rem; color: var(--text-secondary); min-width: 2.5rem; font-style: italic; }
+    .katex-render .katex { font-size: 1.4rem!important; color: var(--text-primary)!important; }
+    .katex-render.deriv .katex { font-size: 1.1rem!important; color: var(--text-secondary)!important; }
+    .katex-err { color: var(--danger); font-size: 0.8rem; }
+    .katex-placeholder { color: var(--text-muted); font-style: italic; font-size: 0.85rem; }
+
+    .run-btn {
+      margin-top: 1.75rem;
+      width: 100%;
+      background: var(--accent-cyan);
+      color: #005762;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      cursor: pointer;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      transition: all 0.2s;
+      box-shadow: 0 8px 24px var(--shadow-cyan);
+    }
+    .run-btn:hover { filter: brightness(1.05); transform: translateY(-1px); box-shadow: 0 12px 32px var(--shadow-cyan); }
+    .run-btn:active { transform: scale(0.98); }
+
+    .graph-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+    .live-dot { width: 8px; height: 8px; background: var(--accent-cyan); border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 6px var(--accent-cyan); }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+    .live-badge { display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.75rem; background: var(--bg-elevated); border-radius: 999px; border: 1px solid var(--border-strong); }
+    .live-badge span { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-secondary); font-weight: 700; }
+    .chart-wrap { position: relative; height: 300px; }
+    .graph-stats { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle); display: grid; grid-template-columns: repeat(3,1fr); }
+    .stat-item { padding: 0.5rem 1rem; text-align: center; }
+    .stat-item+.stat-item { border-left: 1px solid var(--border-subtle); }
+    .stat-label { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-secondary); font-weight: 700; margin-bottom: 0.3rem; }
+    .stat-val { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--text-primary); }
+    .stat-val.ok { color: var(--accent-cyan); }
+    .stat-val.err { color: var(--danger); }
+
+    .bottom-panel { background: var(--bg-panel); border-radius: 1rem; overflow: hidden; border: 1px solid var(--border-subtle); transition: background 0.2s; }
+    .table-header { padding: 1.25rem 2rem; display: flex; align-items: center; justify-content: space-between; background: var(--bg-elevated); border-bottom: 1px solid var(--border-subtle); }
+    .export-btn { display: flex; align-items: center; gap: 0.4rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent-cyan); font-weight: 700; background: var(--bg-elevated); border: 1px solid var(--border-strong); padding: 0.4rem 0.9rem; border-radius: 0.5rem; cursor: pointer; transition: 0.15s; }
+    .export-btn:hover { background: var(--border-subtle); }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    thead tr { background: rgba(0,0,0,0.2); background: var(--bg-elevated); }
+    th { padding: 1rem 1.5rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-secondary); font-weight: 700; text-align: left; }
+    td { padding: 0.9rem 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-secondary); border-bottom: 1px solid var(--border-subtle); }
+    td:nth-child(2) { color: var(--text-primary); font-weight: 500; }
+    tr:hover td { background: var(--accent-cyan-glow); }
+    .badge { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.2rem 0.7rem; border-radius: 999px; font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+    .badge-ok { background: var(--badge-bg-cyan); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); opacity: 0.9; }
+    .badge-proc { background: var(--badge-bg-proc); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+    .badge-div { background: rgba(255,113,108,0.12); color: var(--danger); border: 1px solid var(--danger); }
+
+    .alert { border-radius: 0.75rem; padding: 1rem 1.25rem; font-size: 0.85rem; display: none; line-height: 1.5; margin-bottom: 0; }
+    .alert.show { display: flex; align-items: flex-start; gap: 0.75rem; }
+    .alert-div { background: rgba(255,113,108,0.1); border: 1px solid rgba(255,113,108,0.25); color: var(--danger); }
+    .alert-warn { background: rgba(230,177,0,0.08); border: 1px solid rgba(230,177,0,0.2); color: var(--warning); }
+
+    footer p { text-align: center; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.4em; color: var(--text-muted); font-weight: 700; margin-top: 1rem; }
+    .row-anim { animation: rowSlide 0.25s ease forwards; opacity: 0; }
+    @keyframes rowSlide { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+  
+    /* remove number input arrows */
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    body:not(.dark) .chart-wrap canvas + *,
+    .chart-wrap canvas {
+        filter: none;
+    }
+    .run-btn {
+    color: #001a1f !important;
+    font-weight: 800;
+    }
+
+
+  </style>
+</head>
+<body>
+<div class="bg-blob-1"></div>
+<div class="bg-blob-2"></div>
+<div class="wrap">
+  <div class="top-bar">
+    <div class="hero">
+      <h1>Newton Solver</h1>
+      <p>Iterative root-finding · High-precision diagnostics · Real-time convergence</p>
+      <div class="badge-global">
+        <span>Global Error</span>
+        <span id="badge-err">—</span>
+      </div>
+    </div>
+    <div class="theme-toggle" id="themeToggleBtn">
+      <span class="theme-icon" id="themeIcon">🌙</span>
+      <span id="themeLabel">Dark mode</span>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <!-- Left panel -->
+    <div class="panel">
+      <div class="panel-accent cyan"></div>
+      <div class="section-tag"><div class="bar"></div><span>Input Parameters</span></div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Function f(x)</label><input type="text" id="fn-input" value="7e^(x^3) - x^2 - 4/(1-cos(x))" oninput="liveKatex()"></div>
+        <div class="form-group"><label class="form-label">Initial Guess x₀</label><input type="number" id="x0-input" value="1.5" step="any"></div>
+        <div class="form-group"><label class="form-label">Tolerance ε</label><input type="text" id="tol-input" value="1e-7"></div>
+        <div class="form-group"><label class="form-label">Max Iterations</label><input type="number" id="maxiter-input" value="50"></div>
+      </div>
+      <div class="katex-display-box">
+        <span class="katex-tag">Live Equation Render</span>
+        <div class="katex-row"><span class="katex-lbl">f(x) =</span><span class="katex-render" id="kt-f"><span class="katex-placeholder">start typing…</span></span></div>
+        <div class="katex-row"><span class="katex-lbl">f′(x) =</span><span class="katex-render deriv" id="kt-df"></span></div>
+      </div>
+      <button class="run-btn" onclick="runSolver()"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Execute Solver</button>
+    </div>
+
+    <!-- Right graph panel -->
+    <div class="graph-panel">
+      <div class="panel-accent blue"></div>
+      <div class="graph-header">
+        <div class="section-tag" style="margin:0"><div class="bar blue"></div><span class="blue">Convergence Delta</span></div>
+        <div class="live-badge"><div class="live-dot"></div><span>Live Feed</span></div>
+      </div>
+      <div class="chart-wrap"><canvas id="conv-chart" aria-label="Convergence chart"></canvas></div>
+      <div class="graph-stats">
+        <div class="stat-item"><div class="stat-label">Iterations</div><div class="stat-val" id="s-iter">—</div></div>
+        <div class="stat-item"><div class="stat-label">Root ≈</div><div class="stat-val ok" id="s-root">—</div></div>
+        <div class="stat-item"><div class="stat-label">Confidence</div><div class="stat-val ok" id="s-conf">—</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-div" id="alert-div"><span class="alert-icon">⚠</span><span id="alert-div-msg"></span></div>
+  <div class="alert alert-warn" id="alert-warn"><span class="alert-icon">ℹ</span><span id="alert-warn-msg"></span></div>
+
+  <div class="bottom-panel">
+    <div class="table-header"><div class="section-tag" style="margin:0"><div class="bar"></div><span>Iteration Log</span></div><button class="export-btn" onclick="exportCSV()">↓ Export Dataset</button></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Step</th><th>xₙ</th><th>f(xₙ)</th><th>f′(xₙ)</th><th>Relative Error</th><th>Status</th></tr></thead>
+        <tbody id="iter-tbody"><tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted)">Run the solver to populate the log.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <footer><p>Made by Toni, Student at UQO</p></footer>
+</div>
+
+<script>
+  // ----- THEME TOGGLE (light/dark) -----
+  const themeToggle = document.getElementById('themeToggleBtn');
+  const themeIcon = document.getElementById('themeIcon');
+  const themeLabel = document.getElementById('themeLabel');
+  
+  function setTheme(theme) {
+    if (theme === 'light') {
+      document.body.classList.add('light');
+      localStorage.setItem('newtonm_theme', 'light');
+       themeIcon.innerText = '🌙';
+      themeLabel.innerText = 'Dark mode';
+
+    } else {
+      document.body.classList.remove('light');
+      localStorage.setItem('newtonm_theme', 'dark');
+      themeIcon.innerText = '☀️';
+      themeLabel.innerText = 'Light mode';
+    }
+    
+
+
+  }
+  
+  const savedTheme = localStorage.getItem('newtonm_theme');
+  if (savedTheme === 'light') setTheme('light');
+  else setTheme('dark');
+  
+  themeToggle.addEventListener('click', () => {
+    const isLight = document.body.classList.contains('light');
+    setTheme(isLight ? 'dark' : 'light');
+    // re-render chart if exists to adapt colors (chart uses canvas, will auto update on theme but we reapply palette)
+    if (convChart && lastRows.length) renderChart(lastRows, lastRows.some(r => r.converged));
+  });
+  
+  let convChart = null;
+  let lastRows = [];
+  
+  // helpers: math expression preparation
+  function prepExpr(raw) { return raw.replace(/\bln\s*\(/g, 'log('); }
+  function exprToTex(raw) {
+    const cleaned = prepExpr(raw);
+    const node = math.parse(cleaned);
+    let tex = node.toTex({ parenthesis: 'auto' });
+    tex = tex.replace(/\\log\s*\(/g, '\\ln(');
+    return tex;
+  }
+  function derivToTex(raw) {
+    const cleaned = prepExpr(raw);
+    const node = math.parse(cleaned);
+    const dnode = math.derivative(node, 'x');
+    let tex = dnode.toTex({ parenthesis: 'auto' });
+    tex = tex.replace(/\\log\s*\(/g, '\\ln(');
+    return tex;
+  }
+  
+  function liveKatex() {
+    const raw = document.getElementById('fn-input').value.trim();
+    const ktF = document.getElementById('kt-f');
+    const ktDf = document.getElementById('kt-df');
+    if (!raw) { ktF.innerHTML = '<span class="katex-placeholder">start typing…</span>'; ktDf.innerHTML = ''; return; }
+    try {
+      katex.render(exprToTex(raw), ktF, { throwOnError: false, displayMode: false });
+      katex.render(derivToTex(raw), ktDf, { throwOnError: false, displayMode: false });
+    } catch { ktF.innerHTML = '<span class="katex-err">Invalid expression</span>'; ktDf.innerHTML = ''; }
+  }
+  
+  function makeEval(raw) {
+    const expr = math.parse(prepExpr(raw));
+    const dexpr = math.derivative(expr, 'x');
+    const fe = x => { try { const v = expr.evaluate({x}); return isFinite(v) ? v : NaN; } catch { return NaN; } };
+    const dfe = x => { try { const v = dexpr.evaluate({x}); return isFinite(v) ? v : NaN; } catch { return NaN; } };
+    return { fe, dfe };
+  }
+  
+  function hasSignChange(fe, x0) {
+    const range = 20, steps = 400;
+    let px = x0 - range, pf = fe(px);
+    for (let i = 1; i <= steps; i++) {
+      const cx = x0 - range + (i / steps) * range * 2;
+      const cf = fe(cx);
+      if (isFinite(pf) && isFinite(cf) && pf * cf < 0) return true;
+      px = cx; pf = cf;
+    }
+    return false;
+  }
+  
+  function runSolver() {
+    document.getElementById('alert-div').classList.remove('show');
+    document.getElementById('alert-warn').classList.remove('show');
+    const raw = document.getElementById('fn-input').value.trim();
+    const x0 = parseFloat(document.getElementById('x0-input').value);
+    const tol = parseFloat(document.getElementById('tol-input').value);
+    const maxI = parseInt(document.getElementById('maxiter-input').value);
+    let fe, dfe;
+    try { ({ fe, dfe } = makeEval(raw)); } catch (e) { showDiv('Parse error: ' + e.message); return; }
+    const signOk = hasSignChange(fe, x0);
+    const rows = [];
+    let x = isNaN(x0) ? 0 : x0;
+    let converged = false, diverged = false, divMsg = '';
+    for (let iter = 1; iter <= maxI; iter++) {
+      const fx = fe(x), dfx = dfe(x);
+      if (isNaN(fx) || !isFinite(fx)) { divMsg = `f(x) non-finite at iter ${iter} (x ≈ ${x.toExponential(4)}). Check domain.`; diverged = true; break; }
+      if (isNaN(dfx) || Math.abs(dfx) < 1e-14) { divMsg = `Derivative ~0 at iter ${iter}. Flat region. Try another x₀.`; diverged = true; break; }
+      const xNew = x - fx / dfx;
+      const err = Math.abs(xNew - x);
+      rows.push({ iter, x, fx, dfx, err });
+      if (Math.abs(xNew) > 1e12) { divMsg = `Diverging to infinity at step ${iter}.`; diverged = true; break; }
+      if (err < tol * Math.max(1, Math.abs(xNew))) {
+        x = xNew;
+        rows.push({ iter: iter + 1, x: xNew, fx: fe(xNew), dfx: dfe(xNew), err: 0, converged: true });
+        converged = true; break;
+      }
+      x = xNew;
+    }
+    if (!converged && !diverged) { divMsg = `Max iterations (${maxI}) reached without convergence.`; diverged = true; }
+    lastRows = rows;
+    renderChart(rows, converged);
+    renderTable(rows, converged);
+    renderStats(rows, converged, diverged);
+    if (diverged) { const extra = !signOk ? ' No sign change detected nearby — verify existence of real root.' : ''; showDiv(divMsg + extra); }
+    else if (!signOk) showWarn('No sign change in range, but solver converged — verify root.');
+  }
+  
+  function renderChart(rows, converged) {
+    const labels = rows.map(r => r.iter);
+    const errs = rows.map(r => r.err > 0 ? r.err : null);
+    const lineC = getComputedStyle(document.body).getPropertyValue('--accent-cyan').trim() || (document.body.classList.contains('light') ? '#0f6b7c' : '#81ecff');
+    const bgFill = lineC + '18';
+    if (convChart) convChart.destroy();
+    const ctx = document.getElementById('conv-chart').getContext('2d');
+    convChart = new Chart(ctx, {
+      type: 'line',
+      data: { labels, datasets: [{ label: '|error|', data: errs, borderColor: lineC, backgroundColor: bgFill, pointBackgroundColor: lineC, pointBorderColor: lineC, pointRadius: 4, pointHoverRadius: 7, tension: 0.35, fill: true, borderWidth: 2.5, borderDash: converged ? [] : [6, 4], spanGaps: true }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { backgroundColor: 'var(--bg-elevated)', titleColor: 'var(--text-secondary)', bodyColor: 'var(--text-primary)', callbacks: { label: ctx => '|error| = ' + (ctx.parsed.y != null ? ctx.parsed.y.toExponential(4) : '—') } } },
+        scales: {
+                    x: { 
+                      title: { display: true, text: 'Iteration', color: getComputedStyle(document.body).getPropertyValue('--text-secondary').trim() || '#767575', font: { size: 11 } }, 
+                      ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary').trim() || '#767575' }, 
+                      grid: { color: 'var(--border-subtle)' } 
+                    },
+                    y: { 
+                        type: 'logarithmic', 
+                        title: { display: true, text: '|xₙ₊₁ − xₙ|  (log scale)', color: getComputedStyle(document.body).getPropertyValue('--text-secondary').trim() || '#767575', font: { size: 11 } }, 
+                        ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary').trim() || '#767575', callback: v => v.toExponential(0) }, 
+                        grid: { color: 'var(--border-subtle)' } 
+                    }
+        }
+      }
+    });
+  }
+  
+  function renderStats(rows, converged, diverged) {
+    if (!rows.length) return;
+    const last = rows[rows.length-1];
+    document.getElementById('s-iter').textContent = last.iter;
+    if (converged) {
+      document.getElementById('s-root').textContent = last.x.toFixed(8);
+      document.getElementById('s-conf').textContent = '99.9%';
+      document.getElementById('s-root').className = 'stat-val ok';
+      document.getElementById('s-conf').className = 'stat-val ok';
+    } else {
+      document.getElementById('s-root').textContent = '—';
+      document.getElementById('s-conf').textContent = 'N/A';
+      document.getElementById('s-root').className = 'stat-val err';
+      document.getElementById('s-conf').className = 'stat-val err';
+    }
+    document.getElementById('badge-err').textContent = (last.err > 0 ? last.err.toExponential(2) : (converged ? '< 1e-15' : '—'));
+  }
+  
+  function renderTable(rows, converged) {
+    const tbody = document.getElementById('iter-tbody');
+    tbody.innerHTML = '';
+    rows.forEach((r, i) => {
+      const isLast = i === rows.length-1;
+      let status = '';
+      if (r.converged) status = '<span class="badge badge-ok">Converged</span>';
+      else if (isLast && !converged) status = '<span class="badge badge-div">Diverged</span>';
+      else status = '<span class="badge badge-proc">Processing</span>';
+      const tr = document.createElement('tr');
+      tr.className = 'row-anim';
+      tr.style.animationDelay = Math.min(i * 30, 400) + 'ms';
+      tr.innerHTML = `<td>${String(r.iter).padStart(3,'0')}</td><td>${r.x.toFixed(9)}</td><td>${r.fx.toExponential(5)}</td><td>${r.dfx.toExponential(5)}</td><td style="color:${r.err < 1e-6 ? 'var(--accent-cyan)' : 'var(--accent-blue)'}">${r.err > 0 ? r.err.toExponential(4) : '< 1e-15'}</td><td>${status}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+  
+  function showDiv(msg) { const el = document.getElementById('alert-div'); document.getElementById('alert-div-msg').textContent = msg; el.classList.add('show'); }
+  function showWarn(msg) { const el = document.getElementById('alert-warn'); document.getElementById('alert-warn-msg').textContent = msg; el.classList.add('show'); }
+  
+  function exportCSV() {
+    if (!lastRows.length) return;
+    const header = 'Step,xn,f(xn),df(xn),Error,Status\n';
+    const body = lastRows.map(r => `${r.iter},${r.x},${r.fx},${r.dfx},${r.err},${r.converged ? 'Converged' : 'Diverged'}`).join('\n');
+    const blob = new Blob([header+body], { type: 'text/csv' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'newton_iterations.csv'; a.click();
+  }
+  
+  liveKatex();
+</script>
+</body>
+</html>
