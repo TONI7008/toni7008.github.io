@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Projects | Engineering Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.25s ease, color 0.2s ease;
+    }
+
+    .circuit-pattern {
+      background-image: radial-gradient(circle at 2px 2px, rgba(13, 204, 242, 0.08) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    /* ─── NAV: dark mode ─────────────────────────── */
+    .dark .glass-nav {
+      background: rgba(16, 31, 34, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(13, 204, 242, 0.18);
+    }
+
+    /* ─── NAV: light mode ────────────────────────── */
+    html:not(.dark) .glass-nav {
+      background: rgba(243, 246, 246, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(13, 204, 242, 0.22);
+    }
+
+    /* ─── MOBILE DROPDOWN: dark mode ────────────── */
+    .dark #mobile-menu {
+      background: rgba(16, 31, 34, 0.97);
+      border-top: 1px solid rgba(13, 204, 242, 0.14);
+    }
+
+    /* ─── MOBILE DROPDOWN: light mode ───────────── */
+    html:not(.dark) #mobile-menu {
+      background: rgba(243, 246, 246, 0.98);
+      border-top: 1px solid rgba(13, 204, 242, 0.18);
+    }
+
+    /* hamburger icon: dark in light mode, light in dark mode */
+    html:not(.dark) #menu-icon { color: #1e293b; }
+    .dark #menu-icon            { color: #f1f5f9; }
+
+    /* nav link colors */
+    html:not(.dark) .nav-link { color: #1e293b; }
+    .dark .nav-link            { color: #e2e8f0; }
+    .nav-link:hover            { color: #0dccf2; }
+
+    /* mobile dropdown link colors */
+    html:not(.dark) .mobile-link { color: #1e293b; }
+    .dark .mobile-link            { color: #e2e8f0; }
+    .mobile-link:hover            { color: #0dccf2; }
+
+    /* theme toggle button bg */
+    html:not(.dark) #theme-toggle-btn,
+    html:not(.dark) #mobile-theme-btn {
+      background: rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.10);
+    }
+    .dark #theme-toggle-btn,
+    .dark #mobile-theme-btn {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .card-hover {
+      transition: transform 0.25s ease, box-shadow 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 30px -12px rgba(0,0,0,0.18);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 2rem;
+    }
+    @media (max-width: 768px) {
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #1e2a2e; }
+    ::-webkit-scrollbar-thumb { background: #0dccf2; border-radius: 8px; }
+
+    #mobile-menu {
+      transition: max-height 0.3s ease, opacity 0.25s ease;
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0dccf2',
+            'background-light': '#f3f6f6',
+            'background-dark': '#101f22',
+          },
+          fontFamily: { display: ['Inter', 'sans-serif'] },
+          borderRadius: { 'xl': '0.75rem', '2xl': '1rem' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#f3f6f6] dark:bg-[#101f22] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+
+  <!-- Sticky Navigation -->
+  <nav class="fixed top-0 w-full z-50 glass-nav transition-colors">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <div class="size-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary border border-primary/20">
+          <span class="material-symbols-outlined text-2xl">dashboard</span>
+        </div>
+        <span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+          Project<span class="text-[#0dccf2]">Hub</span>
+        </span>
+      </div>
+
+      <!-- Desktop links -->
+      <div class="hidden md:flex items-center gap-8">
+        <a class="nav-link text-sm font-medium transition-colors" href="#featured">Featured</a>
+        <a class="nav-link text-sm font-medium transition-colors" href="#all-projects">All Projects</a>
+        <a class="nav-link text-sm font-medium transition-colors" href="#contact">Contact</a>
+        <button id="theme-toggle-btn" class="p-2 rounded-full hover:bg-[#0dccf2]/20 transition-all" aria-label="Toggle theme">
+          <span id="theme-icon" class="material-symbols-outlined text-[#0dccf2] text-xl">dark_mode</span>
+        </button>
+        <a class="px-5 py-2.5 bg-[#0dccf2] text-[#101f22] font-bold rounded-lg hover:brightness-110 transition-all text-sm"
+           href="https://github.com/TONI7008" target="_blank">GitHub</a>
+      </div>
+
+      <!-- Mobile controls -->
+      <div class="flex items-center gap-3 md:hidden">
+        <button id="mobile-theme-btn" class="p-2 rounded-full transition-all" aria-label="Toggle theme">
+          <span id="mobile-theme-icon" class="material-symbols-outlined text-[#0dccf2] text-xl">dark_mode</span>
+        </button>
+        <button id="menu-toggle" class="focus:outline-none" aria-label="Toggle menu">
+          <span id="menu-icon" class="material-symbols-outlined text-3xl transition-colors">menu</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile dropdown -->
+    <div id="mobile-menu" class="md:hidden max-h-0 opacity-0 overflow-hidden">
+      <div class="flex flex-col px-6 py-4 gap-4">
+        <a class="mobile-link text-sm font-medium transition-colors py-2" href="#featured"     onclick="closeMobileMenu()">Featured</a>
+        <a class="mobile-link text-sm font-medium transition-colors py-2" href="#all-projects" onclick="closeMobileMenu()">All Projects</a>
+        <a class="mobile-link text-sm font-medium transition-colors py-2" href="#contact"      onclick="closeMobileMenu()">Contact</a>
+        <a class="px-5 py-3 bg-[#0dccf2] text-[#101f22] font-bold rounded-lg text-center text-sm"
+           href="https://github.com/TONI7008" target="_blank" onclick="closeMobileMenu()">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="pt-24">
+
+    <!-- Hero -->
+    <section class="relative py-16 circuit-pattern overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#0dccf2]/5 to-transparent pointer-events-none"></div>
+      <div class="max-w-7xl mx-auto px-6 text-center">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0dccf2]/10 border border-[#0dccf2]/20 text-[#0dccf2] text-xs font-bold uppercase tracking-wider mb-5">
+          <span class="material-symbols-outlined text-sm">rocket_launch</span>
+          Project Vault
+        </div>
+        <h1 class="text-4xl md:text-6xl font-black tracking-tight text-slate-900 dark:text-white mb-5">
+          Engineering <span class="text-[#0dccf2]">Innovation</span>
+        </h1>
+        <p class="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+          Explore my flagship projects — from intelligent IoT systems to classic games rebuilt with modern algorithms.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section header -->
+    <div class="max-w-7xl mx-auto px-6 mt-12" id="featured">
+      <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-200 dark:border-white/10 pb-4 mb-10">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-black flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#0dccf2]">stars</span> Featured Builds
+          </h2>
+          <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Selected works that push boundaries</p>
+        </div>
+        <div class="flex gap-3">
+          <span class="text-xs bg-[#0dccf2]/10 text-[#0dccf2] px-3 py-1 rounded-full font-bold">✨ Real-time</span>
+          <span class="text-xs bg-[#0dccf2]/10 text-[#0dccf2] px-3 py-1 rounded-full font-bold">⚡ Production ready</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project Grid -->
+    <div class="max-w-7xl mx-auto px-6 pb-10" id="all-projects">
+      <div class="projects-grid">
+
+        <!-- 1. Neonatal Monitoring -->
+        <div class="group relative bg-white dark:bg-[#162a2e] rounded-2xl overflow-hidden border border-slate-200 dark:border-white/5 hover:border-[#0dccf2]/40 transition-all duration-300 card-hover shadow-md">
+          <div class="aspect-video relative overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900">
+            <img alt="Neonatal Monitoring System" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZ5v7-a_hcprPDnRHKpytA5upM_OagQdZ99XHX0HVfkpQFlxrQvZIeMuw3NlT2jA60HLE-XdQhptOX2xbOyrJdwEets8cGt0KGO9Oujw7DtyKIGZP3wu-6yIRl7KyE8Bu2R-QHKfe7UaWXLCqcu_p5UjmJWl839M55Z5HahPS6Nh49rT0XY4LgYVHEUKYIEfeV1YYd4TOHOEHSTJlhQjuCeurUs8Q6SOm6NIVLq49wWwLwoXnBksgPk77U1YlMY4ts28Lff1DIn2c">
+            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+          </div>
+          <div class="p-7">
+            <div class="flex gap-2 mb-4 flex-wrap">
+              <span class="px-2 py-1 bg-[#0dccf2]/10 text-[#0dccf2] text-[10px] font-black uppercase rounded-full">IoT</span>
+              <span class="px-2 py-1 bg-[#0dccf2]/10 text-[#0dccf2] text-[10px] font-black uppercase rounded-full">VHDL</span>
+              <span class="px-2 py-1 bg-[#0dccf2]/10 text-[#0dccf2] text-[10px] font-black uppercase rounded-full">C++</span>
+              <span class="px-2 py-1 bg-[#0dccf2]/10 text-[#0dccf2] text-[10px] font-black uppercase rounded-full">React</span>
+            </div>
+            <h3 class="text-xl font-black text-slate-900 dark:text-white mb-2">Neonatal Monitoring IoT Module</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-5">
+              FPGA-powered system preventing SIDS: tracks vitals (heart rate, temperature, gas) with real-time Firebase sync, abnormal alerts, and mobile dashboard.
+            </p>
+            <div class="flex items-center justify-between">
+              <a href="https://github.com/TONI7008/watch_the_baby" target="_blank" rel="noopener noreferrer"
+                 class="flex items-center gap-1 text-[#0dccf2] font-bold text-sm hover:gap-2 transition-all">
+                GitHub <span class="material-symbols-outlined text-sm">open_in_new</span>
+              </a>
+              <span class="text-[10px] uppercase tracking-wider text-slate-400">research grade</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Checkers -->
+        <div class="group relative bg-white dark:bg-[#162a2e] rounded-2xl overflow-hidden border border-slate-200 dark:border-white/5 hover:border-[#0dccf2]/40 transition-all duration-300 card-hover shadow-md">
+          <div class="aspect-video relative overflow-hidden bg-gradient-to-br from-amber-800/40 to-slate-800">
+            <img alt="Checkers Game AI" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8xPq-FJpNxgg8UTzMh67wYc7Cd5DPO-Mp_iB-EoynvepA5y8EMIJTAbzYwbUKw7b2qOv7QNLgQVna9D3-HwqsMV0UB2FmO5--s_QuesnuOpvwwQo8b6-E3_AOzMEThSmzfw2rwYLdyL57CxWKlqOze_cuwg8n5ddlF-3C8sC1bAMlZSSWEYg7AzHKHUVNW94TSboIh6h0_HPurPH_VRfIRqT_ccqB1ZiWQ9tm5UdLXbeA7BED-8ghBdbSEQ1-ilK5tFz-rd1EpFc">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors"></div>
+          </div>
+          <div class="p-7">
+            <div class="flex gap-2 mb-4 flex-wrap">
+              <span class="px-2 py-1 bg-[#0dccf2]/10 text-[#0dccf2] text-[10px] font-black uppercase rounded-full">Game Dev</span>
+              <span class="px-2 py-1 bg-[#0dccf2]/10 text-[#0dccf2] text-[10px] font-black uppercase rounded-full">C++/Qt</span>
+              <span class="px-2 py-1 bg-[#0dccf2]/10 text-[#0dccf2] text-[10px] font-black uppercase rounded-full">Minimax</span>
+            </div>
+            <h3 class="text-xl font-black text-slate-900 dark:text-white mb-2">Multiplayer Checkers Game</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-5">
+              Real-time checkers with advanced AI opponent (alpha-beta pruning + transposition table). Local multiplayer &amp; smart move validation.
+            </p>
+            <div class="flex items-center justify-between">
+              <a href="https://github.com/TONI7008/Checkers" target="_blank" rel="noopener noreferrer"
+                 class="flex items-center gap-1 text-[#0dccf2] font-bold text-sm hover:gap-2 transition-all">
+                Repository <span class="material-symbols-outlined text-sm">open_in_new</span>
+              </a>
+              <span class="text-[10px] uppercase tracking-wider text-slate-400">AI integration</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Minesweeper -->
+        <div class="group relative bg-white dark:bg-[#162a2e] rounded-2xl overflow-hidden border border-slate-200 dark:border-white/5 hover:border-[#0dccf2]/40 transition-all duration-300 card-hover shadow-md">
+          <div class="aspect-video relative overflow-hidden bg-gradient-to-br from-emerald-900/30 to-gray-800">
+            <img alt="Minesweeper Gameplay" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                 src="https://images.unsplash.com/photo-1611996575749-79a3a160f7c8?w=600&h=400&fit=crop"
+                 onerror="this.src='https://placehold.co/600x400/1e2a2e/0dccf2?text=Minesweeper'">
+            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+          </div>
+          <div class="p-7">
+            <div class="flex gap-2 mb-4 flex-wrap">
+              <span class="px-2 py-1 bg-[#0dccf2]/10 text-[#0dccf2] text-[10px] font-black uppercase rounded-full">Classic Game</span>
+              <span class="px-2 py-1 bg-[#0dccf2]/10 text-[#0dccf2] text-[10px] font-black uppercase rounded-full">JavaScript</span>
+              <span class="px-2 py-1 bg-[#0dccf2]/10 text-[#0dccf2] text-[10px] font-black uppercase rounded-full">Canvas</span>
+            </div>
+            <h3 class="text-xl font-black text-slate-900 dark:text-white mb-2">Minesweeper · Classic Reloaded</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-5">
+              Clean, responsive Minesweeper with difficulty levels, flagging, and recursive reveal. Built for speed and nostalgia.
+            </p>
+            <div class="flex items-center justify-between">
+              <a href="https://toni7008.github.io/projets/minesweeper_game.html" target="_blank" rel="noopener noreferrer"
+                 class="flex items-center gap-1 text-[#0dccf2] font-bold text-sm hover:gap-2 transition-all">
+                Play Game <span class="material-symbols-outlined text-sm">stadia_controller</span>
+              </a>
+              <span class="text-[10px] uppercase tracking-wider text-slate-400">live demo</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Newton Solver -->
+        <div class="group relative bg-white dark:bg-[#162a2e] rounded-2xl overflow-hidden border border-slate-200 dark:border-white/5 hover:border-[#0dccf2]/40 transition-all duration-300 card-hover shadow-md">
+          <div class="aspect-video relative overflow-hidden bg-gradient-to-br from-indigo-950/60 to-slate-800">
+            <img alt="Newton Raphson Visualization" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                 src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&h=400&fit=crop"
+                 onerror="this.src='https://placehold.co/600x400/101f22/0dccf2?text=Newton+Solver'">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+          </div>
+          <div class="p-7">
+            <div class="flex gap-2 mb-4 flex-wrap">
+              <span class="px-2 py-1 bg-[#0dccf2]/10 text-[#0dccf2] text-[10px] font-black uppercase rounded-full">Numerical Methods</span>
+              <span class="px-2 py-1 bg-[#0dccf2]/10 text-[#0dccf2] text-[10px] font-black uppercase rounded-full">JavaScript</span>
+              <span class="px-2 py-1 bg-[#0dccf2]/10 text-[#0dccf2] text-[10px] font-black uppercase rounded-full">Math.js</span>
+            </div>
+            <h3 class="text-xl font-black text-slate-900 dark:text-white mb-2">Newton‑Raphson Solver</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-5">
+              High-precision iterative root finder with live function rendering, convergence graph, and iteration logging. Handles derivatives automatically.
+            </p>
+            <div class="flex items-center justify-between">
+              <a href="https://toni7008.github.io/projets/root_solver_newton.html" target="_blank" rel="noopener noreferrer"
+                 class="flex items-center gap-1 text-[#0dccf2] font-bold text-sm hover:gap-2 transition-all">
+                Launch Solver <span class="material-symbols-outlined text-sm">functions</span>
+              </a>
+              <span class="text-[10px] uppercase tracking-wider text-slate-400">real-time error</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Debug Monitor -->
+        <div class="group relative bg-white dark:bg-[#162a2e] rounded-2xl overflow-hidden border border-slate-200 dark:border-white/5 hover:border-[#0dccf2]/40 transition-all duration-300 card-hover shadow-md">
+          <div class="aspect-video relative overflow-hidden bg-gradient-to-br from-cyan-950/50 to-slate-700 flex items-center justify-center">
+            <span class="material-symbols-outlined text-6xl text-[#0dccf2]/40">deployed_code</span>
+          </div>
+          <div class="p-7">
+            <div class="flex gap-2 mb-4 flex-wrap">
+              <span class="px-2 py-1 bg-[#0dccf2]/10 text-[#0dccf2] text-[10px] font-black uppercase rounded-full">Toolkit</span>
+              <span class="px-2 py-1 bg-[#0dccf2]/10 text-[#0dccf2] text-[10px] font-black uppercase rounded-full">Python</span>
+            </div>
+            <h3 class="text-xl font-black text-slate-900 dark:text-white mb-2">Embedded Debug Monitor</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-5">
+              Serial protocol analyzer for UART/I2C, integrated logging and real-time signal plotting for embedded development.
+            </p>
+            <div class="flex items-center justify-between">
+              <a href="https://github.com/TONI7008" target="_blank"
+                 class="flex items-center gap-1 text-[#0dccf2] font-bold text-sm hover:gap-2 transition-all">
+                Explore <span class="material-symbols-outlined text-sm">arrow_forward</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. FPGA FIR Filter -->
+        <div class="group relative bg-white dark:bg-[#162a2e] rounded-2xl overflow-hidden border border-slate-200 dark:border-white/5 hover:border-[#0dccf2]/40 transition-all duration-300 card-hover shadow-md">
+          <div class="aspect-video relative overflow-hidden bg-gradient-to-br from-purple-900/30 to-slate-800 flex items-center justify-center">
+            <span class="material-symbols-outlined text-6xl text-[#0dccf2]/40">developer_board</span>
+          </div>
+          <div class="p-7">
+            <div class="flex gap-2 mb-4 flex-wrap">
+              <span class="px-2 py-1 bg-[#0dccf2]/10 text-[#0dccf2] text-[10px] font-black uppercase rounded-full">VHDL</span>
+              <span class="px-2 py-1 bg-[#0dccf2]/10 text-[#0dccf2] text-[10px] font-black uppercase rounded-full">DSP</span>
+            </div>
+            <h3 class="text-xl font-black text-slate-900 dark:text-white mb-2">FPGA FIR Filter</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-5">
+              Configurable digital filter implemented on Intel Cyclone IV, with testbench and coefficient generator.
+            </p>
+            <div class="flex items-center justify-between">
+              <a href="https://github.com/TONI7008"
+                 class="flex items-center gap-1 text-[#0dccf2] font-bold text-sm hover:gap-2 transition-all">
+                GitHub <span class="material-symbols-outlined text-sm">open_in_new</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <section class="py-20 max-w-7xl mx-auto px-6" id="contact">
+      <div class="bg-[#0dccf2]/10 dark:bg-[#0dccf2]/5 rounded-3xl p-10 text-center border border-[#0dccf2]/20 backdrop-blur-sm">
+        <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-3">Collaborate on impactful projects</h2>
+        <p class="text-slate-600 dark:text-slate-300 max-w-xl mx-auto mb-6">Have a concept in mind? I'm open to research partnerships and engineering challenges.</p>
+        <a href="mailto:contact@igor.dev"
+           class="inline-flex items-center gap-2 px-8 py-3 bg-[#0dccf2] text-[#101f22] font-black rounded-xl hover:brightness-110 transition-all shadow-lg shadow-[#0dccf2]/20">
+          <span class="material-symbols-outlined">mail</span>
+          Start a conversation
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-200 dark:border-white/10 py-12 mt-8">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+        <span class="font-bold tracking-tight text-[#0dccf2]">ProjectHub</span>
+        <span>© 2026 — Engineering showcase</span>
+      </div>
+      <div class="flex gap-6">
+        <a class="text-slate-500 hover:text-[#0dccf2] transition-colors text-sm" href="https://github.com/TONI7008" target="_blank">GitHub</a>
+        <a class="text-slate-500 hover:text-[#0dccf2] transition-colors text-sm" href="#">Portfolio</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggleBtn  = document.getElementById('theme-toggle-btn');
+    const mobileThemeBtn  = document.getElementById('mobile-theme-btn');
+    const themeIconSpan   = document.getElementById('theme-icon');
+    const mobileThemeIcon = document.getElementById('mobile-theme-icon');
+
+    function setTheme(theme) {
+      const html = document.documentElement;
+      if (theme === 'dark') {
+        html.classList.add('dark');
+        localStorage.setItem('projectTheme', 'dark');
+        if (themeIconSpan)   themeIconSpan.textContent  = 'dark_mode';
+        if (mobileThemeIcon) mobileThemeIcon.textContent = 'dark_mode';
+      } else {
+        html.classList.remove('dark');
+        localStorage.setItem('projectTheme', 'light');
+        if (themeIconSpan)   themeIconSpan.textContent  = 'light_mode';
+        if (mobileThemeIcon) mobileThemeIcon.textContent = 'light_mode';
+      }
+    }
+
+    function toggleTheme() {
+      setTheme(document.documentElement.classList.contains('dark') ? 'light' : 'dark');
+    }
+
+    setTheme(localStorage.getItem('projectTheme') === 'light' ? 'light' : 'dark');
+
+    if (themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
+    if (mobileThemeBtn) mobileThemeBtn.addEventListener('click', toggleTheme);
+
+    // Mobile menu
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIconEl = document.getElementById('menu-icon');
+
+    function closeMobileMenu() {
+      if (!mobileMenu) return;
+      mobileMenu.style.maxHeight = '0px';
+      mobileMenu.style.opacity   = '0';
+      if (menuIconEl) menuIconEl.textContent = 'menu';
+    }
+
+    if (menuToggle) {
+      menuToggle.addEventListener('click', () => {
+        const isOpen = mobileMenu.style.maxHeight && mobileMenu.style.maxHeight !== '0px';
+        if (isOpen) {
+          closeMobileMenu();
+        } else {
+          mobileMenu.style.maxHeight = '400px';
+          mobileMenu.style.opacity   = '1';
+          if (menuIconEl) menuIconEl.textContent = 'close';
+        }
+      });
+    }
+
+    document.addEventListener('click', (e) => {
+      if (menuToggle && mobileMenu &&
+          !menuToggle.contains(e.target) && !mobileMenu.contains(e.target)) {
+        closeMobileMenu();
+      }
+    });
+
+    document.querySelectorAll('#mobile-menu a').forEach(l => l.addEventListener('click', closeMobileMenu));
+  </script>
+</body>
+</html>
