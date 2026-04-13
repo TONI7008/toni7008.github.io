@@ -4,20 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Newton Solver | Advanced Root-Finding Workbench</title>
-  <!-- Google Fonts + KaTeX + math.js + Chart.js -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.0.0/math.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* CSS custom properties for dynamic theming */
     :root {
       --bg-body: #0e0e0e;
       --bg-panel: #131313;
@@ -71,106 +65,72 @@
       transition: background 0.25s, color 0.2s;
     }
 
-    /* floating blobs */
     .bg-blob-1, .bg-blob-2 {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(120px);
-      pointer-events: none;
-      z-index: -1;
-      transition: background 0.3s;
+      position: fixed; border-radius: 50%; filter: blur(120px);
+      pointer-events: none; z-index: -1; transition: background 0.3s;
     }
     .bg-blob-1 { top: 0; right: 0; width: 500px; height: 500px; background: var(--blob-1); transform: translate(50%, -50%); }
     .bg-blob-2 { bottom: 0; left: 0; width: 350px; height: 350px; background: var(--blob-2); transform: translate(-50%, 50%); }
 
     .wrap { max-width: 1300px; margin: 0 auto; padding: 2rem; display: flex; flex-direction: column; gap: 2rem; }
 
-    /* header + toggle row */
     .top-bar { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; }
     .hero { display: flex; flex-direction: column; gap: 0.4rem; }
     .hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; letter-spacing: -0.03em; color: var(--text-primary); line-height: 1; }
     .hero p { color: var(--text-secondary); font-size: 0.9rem; letter-spacing: 0.05em; max-width: 500px; }
 
     .theme-toggle {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-strong);
-      border-radius: 3rem;
-      padding: 0.5rem 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.75rem;
-      letter-spacing: 0.02em;
-      backdrop-filter: blur(4px);
-      transition: var(--transition);
-      color: var(--text-secondary);
+      background: var(--bg-elevated); border: 1px solid var(--border-strong); border-radius: 3rem;
+      padding: 0.5rem 1rem; display: flex; align-items: center; gap: 0.6rem; cursor: pointer;
+      font-weight: 600; font-size: 0.75rem; letter-spacing: 0.02em; backdrop-filter: blur(4px);
+      transition: var(--transition); color: var(--text-secondary);
     }
     .theme-toggle:hover { background: var(--border-subtle); transform: scale(0.98); }
     .theme-icon { font-size: 1.2rem; }
 
     .badge-global {
-      display: inline-flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.6rem 1.2rem;
-      background: var(--bg-elevated);
-      border-left: 3px solid var(--accent-cyan);
-      border-radius: 4px;
-      margin-top: 0.5rem;
-      align-self: flex-start;
+      display: inline-flex; align-items: center; gap: 1rem; padding: 0.6rem 1.2rem;
+      background: var(--bg-elevated); border-left: 3px solid var(--accent-cyan);
+      border-radius: 4px; margin-top: 0.5rem; align-self: flex-start;
     }
     .badge-global span:first-child { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-secondary); font-weight: 700; }
     .badge-global span:last-child { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--accent-cyan); }
 
-    /* main grid */
     .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
     @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
 
     .panel, .graph-panel {
-      background: var(--bg-panel);
-      border-radius: 1rem;
-      padding: 2rem;
-      border: 1px solid var(--border-subtle);
-      position: relative;
-      overflow: hidden;
+      background: var(--bg-panel); border-radius: 1rem; padding: 2rem;
+      border: 1px solid var(--border-subtle); position: relative; overflow: hidden;
       transition: background 0.2s, border 0.2s;
     }
     .panel-accent { position: absolute; top: 0; left: 0; width: 100%; height: 3px; }
     .panel-accent.cyan { background: linear-gradient(90deg, var(--accent-cyan), transparent); }
     .panel-accent.blue { background: linear-gradient(90deg, var(--accent-blue), transparent); }
+    .panel-accent.purple { background: linear-gradient(90deg, var(--accent-purple), transparent); }
 
     .section-tag { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.5rem; }
     .section-tag .bar { width: 2rem; height: 3px; background: var(--accent-cyan); border-radius: 2px; }
     .section-tag .bar.blue { background: var(--accent-blue); }
+    .section-tag .bar.purple { background: var(--accent-purple); }
     .section-tag span { font-family: 'Space Grotesk', sans-serif; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.3em; font-weight: 700; color: var(--accent-cyan); }
     .section-tag span.blue { color: var(--accent-blue); }
+    .section-tag span.purple { color: var(--accent-purple); }
 
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
     .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
     .form-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-secondary); font-weight: 700; }
     input, input[type="text"], input[type="number"] {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-strong);
-      color: var(--text-primary);
-      padding: 0.9rem 1rem;
-      border-radius: 0.75rem;
-      font-size: 1rem;
-      font-family: 'JetBrains Mono', monospace;
-      outline: none;
-      width: 100%;
+      background: var(--bg-elevated); border: 1px solid var(--border-strong); color: var(--text-primary);
+      padding: 0.9rem 1rem; border-radius: 0.75rem; font-size: 1rem;
+      font-family: 'JetBrains Mono', monospace; outline: none; width: 100%;
       transition: border 0.2s, box-shadow 0.2s;
     }
     input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 0 3px var(--accent-cyan-glow); }
 
     .katex-display-box {
-      margin-top: 1.5rem;
-      background: var(--accent-cyan-glow);
-      border: 1px solid var(--border-strong);
-      border-radius: 1rem;
-      padding: 1.5rem 2rem;
-      transition: background 0.2s;
+      margin-top: 1.5rem; background: var(--accent-cyan-glow); border: 1px solid var(--border-strong);
+      border-radius: 1rem; padding: 1.5rem 2rem; transition: background 0.2s;
     }
     .katex-tag { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.25em; color: var(--accent-cyan); font-weight: 700; margin-bottom: 0.25rem; display: block; }
     .katex-row { display: flex; align-items: center; gap: 0.75rem; min-height: 2rem; }
@@ -181,25 +141,11 @@
     .katex-placeholder { color: var(--text-muted); font-style: italic; font-size: 0.85rem; }
 
     .run-btn {
-      margin-top: 1.75rem;
-      width: 100%;
-      background: var(--accent-cyan);
-      color: #005762;
-      padding: 1rem;
-      border-radius: 0.75rem;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 800;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      cursor: pointer;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      transition: all 0.2s;
-      box-shadow: 0 8px 24px var(--shadow-cyan);
+      margin-top: 1.75rem; width: 100%; background: var(--accent-cyan); color: #001a1f !important;
+      padding: 1rem; border-radius: 0.75rem; font-family: 'Space Grotesk', sans-serif; font-weight: 800;
+      font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.2em; cursor: pointer;
+      border: none; display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+      transition: all 0.2s; box-shadow: 0 8px 24px var(--shadow-cyan);
     }
     .run-btn:hover { filter: brightness(1.05); transform: translateY(-1px); box-shadow: 0 12px 32px var(--shadow-cyan); }
     .run-btn:active { transform: scale(0.98); }
@@ -218,13 +164,43 @@
     .stat-val.ok { color: var(--accent-cyan); }
     .stat-val.err { color: var(--danger); }
 
+    /* ---- f(x) graph panel ---- */
+    .fx-panel {
+      background: var(--bg-panel); border-radius: 1rem; padding: 2rem;
+      border: 1px solid var(--border-subtle); position: relative; overflow: hidden;
+      transition: background 0.2s, border 0.2s;
+    }
+    .fx-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem; }
+    .fx-chart-wrap { position: relative; height: 380px; }
+    .fx-legend {
+      margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border-subtle);
+      display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center;
+    }
+    .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; color: var(--text-secondary); font-weight: 600; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .legend-line { width: 18px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+    .fx-controls { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    .fx-zoom-btn {
+      background: var(--bg-elevated); border: 1px solid var(--border-strong); color: var(--text-secondary);
+      padding: 0.35rem 0.85rem; border-radius: 0.5rem; font-size: 0.65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.12em; cursor: pointer; transition: var(--transition);
+    }
+    .fx-zoom-btn:hover { background: var(--border-subtle); color: var(--text-primary); }
+    .fx-zoom-btn.active { background: var(--accent-cyan-glow); border-color: var(--accent-cyan); color: var(--accent-cyan); }
+    .fx-placeholder {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100%; gap: 0.75rem; color: var(--text-muted);
+    }
+    .fx-placeholder svg { opacity: 0.3; }
+    .fx-placeholder p { font-size: 0.8rem; font-style: italic; }
+
     .bottom-panel { background: var(--bg-panel); border-radius: 1rem; overflow: hidden; border: 1px solid var(--border-subtle); transition: background 0.2s; }
     .table-header { padding: 1.25rem 2rem; display: flex; align-items: center; justify-content: space-between; background: var(--bg-elevated); border-bottom: 1px solid var(--border-subtle); }
     .export-btn { display: flex; align-items: center; gap: 0.4rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent-cyan); font-weight: 700; background: var(--bg-elevated); border: 1px solid var(--border-strong); padding: 0.4rem 0.9rem; border-radius: 0.5rem; cursor: pointer; transition: 0.15s; }
     .export-btn:hover { background: var(--border-subtle); }
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-    thead tr { background: rgba(0,0,0,0.2); background: var(--bg-elevated); }
+    thead tr { background: var(--bg-elevated); }
     th { padding: 1rem 1.5rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-secondary); font-weight: 700; text-align: left; }
     td { padding: 0.9rem 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-secondary); border-bottom: 1px solid var(--border-subtle); }
     td:nth-child(2) { color: var(--text-primary); font-weight: 500; }
@@ -242,23 +218,9 @@
     footer p { text-align: center; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.4em; color: var(--text-muted); font-weight: 700; margin-top: 1rem; }
     .row-anim { animation: rowSlide 0.25s ease forwards; opacity: 0; }
     @keyframes rowSlide { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-  
-    /* remove number input arrows */
+
     input[type=number]::-webkit-outer-spin-button,
-    input[type=number]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-    body:not(.dark) .chart-wrap canvas + *,
-    .chart-wrap canvas {
-        filter: none;
-    }
-    .run-btn {
-    color: #001a1f !important;
-    font-weight: 800;
-    }
-
-
+    input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   </style>
 </head>
 <body>
@@ -299,14 +261,14 @@
       <button class="run-btn" onclick="runSolver()"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Execute Solver</button>
     </div>
 
-    <!-- Right graph panel -->
+    <!-- Right convergence panel -->
     <div class="graph-panel">
       <div class="panel-accent blue"></div>
       <div class="graph-header">
         <div class="section-tag" style="margin:0"><div class="bar blue"></div><span class="blue">Convergence Delta</span></div>
         <div class="live-badge"><div class="live-dot"></div><span>Live Feed</span></div>
       </div>
-      <div class="chart-wrap"><canvas id="conv-chart" aria-label="Convergence chart"></canvas></div>
+      <div class="chart-wrap"><canvas id="conv-chart" role="img" aria-label="Convergence error chart showing iteration steps vs absolute error on log scale">Run solver to see convergence data.</canvas></div>
       <div class="graph-stats">
         <div class="stat-item"><div class="stat-label">Iterations</div><div class="stat-val" id="s-iter">—</div></div>
         <div class="stat-item"><div class="stat-label">Root ≈</div><div class="stat-val ok" id="s-root">—</div></div>
@@ -317,6 +279,34 @@
 
   <div class="alert alert-div" id="alert-div"><span class="alert-icon">⚠</span><span id="alert-div-msg"></span></div>
   <div class="alert alert-warn" id="alert-warn"><span class="alert-icon">ℹ</span><span id="alert-warn-msg"></span></div>
+
+  <!-- f(x) Graph Panel -->
+  <div class="fx-panel" id="fx-panel">
+    <div class="panel-accent purple"></div>
+    <div class="fx-panel-header">
+      <div class="section-tag" style="margin:0"><div class="bar purple"></div><span class="purple">f(x) Function Graph · Newton Points</span></div>
+      <div class="fx-controls">
+        <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-secondary);font-weight:700;">Zoom:</span>
+        <button class="fx-zoom-btn" id="zoom-tight" onclick="setZoom('tight')">Tight</button>
+        <button class="fx-zoom-btn active" id="zoom-normal" onclick="setZoom('normal')">Normal</button>
+        <button class="fx-zoom-btn" id="zoom-wide" onclick="setZoom('wide')">Wide</button>
+      </div>
+    </div>
+    <div class="fx-chart-wrap">
+      <canvas id="fx-chart" role="img" aria-label="Graph of f(x) function with Newton iteration points highlighted">Run the solver to display the function graph and Newton iteration points.</canvas>
+      <div class="fx-placeholder" id="fx-placeholder">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18M3 6h18M3 18h18"/><circle cx="8" cy="9" r="1.5"/><circle cx="14" cy="15" r="1.5"/></svg>
+        <p>Execute solver to render f(x) with Newton trajectory</p>
+      </div>
+    </div>
+    <div class="fx-legend" id="fx-legend" style="display:none">
+      <div class="legend-item"><div class="legend-line" style="background:#a68cff"></div><span>f(x) curve</span></div>
+      <div class="legend-item"><div class="legend-line" style="background:rgba(166,140,255,0.3);border:1px dashed #a68cff;height:1px"></div><span>y = 0 axis</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#81ecff;border:2px solid #ffffff"></div><span>Newton iterates xₙ</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f5d06a;width:14px;height:14px;border-radius:3px"></div><span>Initial guess x₀</span></div>
+      <div class="legend-item" id="legend-root-item" style="display:none"><div class="legend-dot" style="background:#ff716c;border:2px solid #ffffff"></div><span>Root (converged)</span></div>
+    </div>
+  </div>
 
   <div class="bottom-panel">
     <div class="table-header"><div class="section-tag" style="margin:0"><div class="bar"></div><span>Iteration Log</span></div><button class="export-btn" onclick="exportCSV()">↓ Export Dataset</button></div>
@@ -331,44 +321,42 @@
 </div>
 
 <script>
-  // ----- THEME TOGGLE (light/dark) -----
+  // ----- THEME -----
   const themeToggle = document.getElementById('themeToggleBtn');
   const themeIcon = document.getElementById('themeIcon');
   const themeLabel = document.getElementById('themeLabel');
-  
+
   function setTheme(theme) {
     if (theme === 'light') {
       document.body.classList.add('light');
       localStorage.setItem('newtonm_theme', 'light');
-       themeIcon.innerText = '🌙';
+      themeIcon.innerText = '🌙';
       themeLabel.innerText = 'Dark mode';
-
     } else {
       document.body.classList.remove('light');
       localStorage.setItem('newtonm_theme', 'dark');
       themeIcon.innerText = '☀️';
       themeLabel.innerText = 'Light mode';
     }
-    
-
-
   }
-  
+
   const savedTheme = localStorage.getItem('newtonm_theme');
   if (savedTheme === 'light') setTheme('light');
   else setTheme('dark');
-  
+
   themeToggle.addEventListener('click', () => {
     const isLight = document.body.classList.contains('light');
     setTheme(isLight ? 'dark' : 'light');
-    // re-render chart if exists to adapt colors (chart uses canvas, will auto update on theme but we reapply palette)
     if (convChart && lastRows.length) renderChart(lastRows, lastRows.some(r => r.converged));
+    if (fxChart && lastRows.length) renderFxChart(lastRows, lastRows.some(r => r.converged));
   });
-  
+
   let convChart = null;
+  let fxChart = null;
   let lastRows = [];
-  
-  // helpers: math expression preparation
+  let currentZoom = 'normal';
+  let lastFe = null;
+
   function prepExpr(raw) { return raw.replace(/\bln\s*\(/g, 'log('); }
   function exprToTex(raw) {
     const cleaned = prepExpr(raw);
@@ -385,7 +373,7 @@
     tex = tex.replace(/\\log\s*\(/g, '\\ln(');
     return tex;
   }
-  
+
   function liveKatex() {
     const raw = document.getElementById('fn-input').value.trim();
     const ktF = document.getElementById('kt-f');
@@ -396,7 +384,7 @@
       katex.render(derivToTex(raw), ktDf, { throwOnError: false, displayMode: false });
     } catch { ktF.innerHTML = '<span class="katex-err">Invalid expression</span>'; ktDf.innerHTML = ''; }
   }
-  
+
   function makeEval(raw) {
     const expr = math.parse(prepExpr(raw));
     const dexpr = math.derivative(expr, 'x');
@@ -404,7 +392,7 @@
     const dfe = x => { try { const v = dexpr.evaluate({x}); return isFinite(v) ? v : NaN; } catch { return NaN; } };
     return { fe, dfe };
   }
-  
+
   function hasSignChange(fe, x0) {
     const range = 20, steps = 400;
     let px = x0 - range, pf = fe(px);
@@ -416,7 +404,7 @@
     }
     return false;
   }
-  
+
   function runSolver() {
     document.getElementById('alert-div').classList.remove('show');
     document.getElementById('alert-warn').classList.remove('show');
@@ -426,6 +414,7 @@
     const maxI = parseInt(document.getElementById('maxiter-input').value);
     let fe, dfe;
     try { ({ fe, dfe } = makeEval(raw)); } catch (e) { showDiv('Parse error: ' + e.message); return; }
+    lastFe = fe;
     const signOk = hasSignChange(fe, x0);
     const rows = [];
     let x = isNaN(x0) ? 0 : x0;
@@ -450,14 +439,16 @@
     renderChart(rows, converged);
     renderTable(rows, converged);
     renderStats(rows, converged, diverged);
+    renderFxChart(rows, converged);
     if (diverged) { const extra = !signOk ? ' No sign change detected nearby — verify existence of real root.' : ''; showDiv(divMsg + extra); }
     else if (!signOk) showWarn('No sign change in range, but solver converged — verify root.');
   }
-  
+
+  // ---- CONVERGENCE CHART ----
   function renderChart(rows, converged) {
     const labels = rows.map(r => r.iter);
     const errs = rows.map(r => r.err > 0 ? r.err : null);
-    const lineC = getComputedStyle(document.body).getPropertyValue('--accent-cyan').trim() || (document.body.classList.contains('light') ? '#0f6b7c' : '#81ecff');
+    const lineC = document.body.classList.contains('light') ? '#0f6b7c' : '#81ecff';
     const bgFill = lineC + '18';
     if (convChart) convChart.destroy();
     const ctx = document.getElementById('conv-chart').getContext('2d');
@@ -466,24 +457,279 @@
       data: { labels, datasets: [{ label: '|error|', data: errs, borderColor: lineC, backgroundColor: bgFill, pointBackgroundColor: lineC, pointBorderColor: lineC, pointRadius: 4, pointHoverRadius: 7, tension: 0.35, fill: true, borderWidth: 2.5, borderDash: converged ? [] : [6, 4], spanGaps: true }] },
       options: {
         responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: { backgroundColor: 'var(--bg-elevated)', titleColor: 'var(--text-secondary)', bodyColor: 'var(--text-primary)', callbacks: { label: ctx => '|error| = ' + (ctx.parsed.y != null ? ctx.parsed.y.toExponential(4) : '—') } } },
+        plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1a1a1a', titleColor: '#adaaaa', bodyColor: '#ffffff', callbacks: { label: ctx => '|error| = ' + (ctx.parsed.y != null ? ctx.parsed.y.toExponential(4) : '—') } } },
         scales: {
-                    x: { 
-                      title: { display: true, text: 'Iteration', color: getComputedStyle(document.body).getPropertyValue('--text-secondary').trim() || '#767575', font: { size: 11 } }, 
-                      ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary').trim() || '#767575' }, 
-                      grid: { color: 'var(--border-subtle)' } 
-                    },
-                    y: { 
-                        type: 'logarithmic', 
-                        title: { display: true, text: '|xₙ₊₁ − xₙ|  (log scale)', color: getComputedStyle(document.body).getPropertyValue('--text-secondary').trim() || '#767575', font: { size: 11 } }, 
-                        ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary').trim() || '#767575', callback: v => v.toExponential(0) }, 
-                        grid: { color: 'var(--border-subtle)' } 
-                    }
+          x: { title: { display: true, text: 'Iteration', color: '#767575', font: { size: 11 } }, ticks: { color: '#767575' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          y: { type: 'logarithmic', title: { display: true, text: '|xₙ₊₁ − xₙ|  (log scale)', color: '#767575', font: { size: 11 } }, ticks: { color: '#767575', callback: v => v.toExponential(0) }, grid: { color: 'rgba(255,255,255,0.05)' } }
         }
       }
     });
   }
+
+  // ---- f(x) CHART ----
+  function setZoom(mode) {
+    currentZoom = mode;
+    document.querySelectorAll('.fx-zoom-btn').forEach(b => b.classList.remove('active'));
+    const zoomBtn = document.getElementById('zoom-' + mode);
+    if (zoomBtn) zoomBtn.classList.add('active');
+    if (lastRows.length && lastFe) {
+      renderFxChart(lastRows, lastRows.some(r => r.converged));
+  }
+}
+
+  function computeFxDomain(rows, converged) {
+    const iterXs = rows.map(r => r.x).filter(isFinite);
+    if (!iterXs.length) return { xMin: -5, xMax: 5 };
+
+    const xMin = Math.min(...iterXs);
+    const xMax = Math.max(...iterXs);
+    const spread = Math.max(xMax - xMin, 1e-6);
+
+    let padding;
+    if (currentZoom === 'tight') {
+      padding = spread * 0.35;
+    } else if (currentZoom === 'normal') {
+      padding = spread * 1.2;
+    } else {
+      padding = spread * 3.0;
+    }
+
+    return { xMin: xMin - padding, xMax: xMax + padding };
+  }
+
+  function renderFxChart(rows, converged) {
+  // Guard: if no function exists or no rows
+  if (!lastFe || !rows.length) {
+    const placeholder = document.getElementById('fx-placeholder');
+    if (placeholder) placeholder.style.display = 'flex';
+    const legend = document.getElementById('fx-legend');
+    if (legend) legend.style.display = 'none';
+    
+    if (fxChart) {
+      fxChart.destroy();
+      fxChart = null;
+    }
+    return;
+  }
   
+  const placeholder = document.getElementById('fx-placeholder');
+  if (placeholder) placeholder.style.display = 'none';
+  const legend = document.getElementById('fx-legend');
+  if (legend) legend.style.display = 'flex';
+
+  const rootItem = document.getElementById('legend-root-item');
+  if (rootItem) rootItem.style.display = converged ? 'flex' : 'none';
+
+  const iterXs = rows.map(r => r.x).filter(x => isFinite(x) && !isNaN(x));
+  if (!iterXs.length) return;
+
+  let { xMin, xMax } = computeFxDomain(rows, converged);
+  
+  if (!isFinite(xMin) || !isFinite(xMax) || xMin >= xMax) {
+    xMin = iterXs[0] - 5;
+    xMax = iterXs[0] + 5;
+  }
+  
+  const N = 500;
+  const step = (xMax - xMin) / N;
+
+  // IMPORTANT: Filter out null/undefined points instead of keeping them
+  const curvePts = [];
+  for (let i = 0; i <= N; i++) {
+    const xv = xMin + i * step;
+    try {
+      const yv = lastFe(xv);
+      if (isFinite(yv) && Math.abs(yv) < 1e10) {
+        curvePts.push({ x: xv, y: yv });
+      }
+      // Skip invalid points - don't push anything
+    } catch(e) {
+      // Skip points that cause errors
+    }
+  }
+
+  // If no valid curve points, return
+  if (curvePts.length === 0) return;
+
+  const finiteY = curvePts.map(p => p.y);
+  const iterY = rows.map(r => r.fx).filter(y => isFinite(y) && !isNaN(y));
+  const allY = [...finiteY, ...iterY];
+  
+  if (!allY.length) return;
+
+  let yMin = Math.min(...allY);
+  let yMax = Math.max(...allY);
+  const ySpan = Math.max(yMax - yMin, 1e-9);
+  const yPad = ySpan * 0.15;
+  yMin -= yPad;
+  yMax += yPad;
+
+  const globalMed = (yMin + yMax) / 2;
+  const halfSpan = Math.min((yMax - yMin) / 2, Math.abs(globalMed) * 5 + 50);
+  const finalYMin = globalMed - halfSpan;
+  const finalYMax = globalMed + halfSpan;
+
+  const isLight = document.body.classList.contains('light');
+  const curveColor = isLight ? '#7c5cbf' : '#a68cff';
+  const curveColorFade = isLight ? 'rgba(124,92,191,0.08)' : 'rgba(166,140,255,0.08)';
+  const zeroLineColor = isLight ? 'rgba(124,92,191,0.35)' : 'rgba(166,140,255,0.35)';
+  const pointColor = isLight ? '#0f6b7c' : '#81ecff';
+  const x0Color = '#f5d06a';
+  const rootColor = '#ff716c';
+  const gridColor = isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)';
+  const tickColor = isLight ? '#5a6874' : '#767575';
+
+  const newtonPoints = rows
+    .filter((r, i) => i < rows.length - 1 || !r.converged)
+    .filter(r => isFinite(r.x) && isFinite(r.fx))
+    .map(r => ({ x: r.x, y: r.fx }));
+
+  const x0Row = rows[0];
+  const x0Point = (x0Row && isFinite(x0Row.x) && isFinite(x0Row.fx)) ? [{ x: x0Row.x, y: x0Row.fx }] : [];
+
+  const lastRow = rows[rows.length - 1];
+  const rootPoint = (converged && lastRow && isFinite(lastRow.x) && isFinite(lastRow.fx))
+    ? [{ x: lastRow.x, y: lastRow.fx }]
+    : [];
+
+  const zeroLine = [{ x: xMin, y: 0 }, { x: xMax, y: 0 }];
+
+  if (fxChart) {
+    fxChart.destroy();
+    fxChart = null;
+  }
+  
+  const canvas = document.getElementById('fx-chart');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  fxChart = new Chart(ctx, {
+    type: 'line', // Changed to 'line' for better handling
+    data: {
+      datasets: [
+        {
+          label: 'f(x)',
+          data: curvePts,
+          type: 'line',
+          borderColor: curveColor,
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          borderWidth: 2.5,
+          tension: 0.3,
+          fill: false,
+          order: 4
+        },
+        {
+          label: 'y = 0',
+          data: zeroLine,
+          type: 'line',
+          borderColor: zeroLineColor,
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          borderWidth: 1.5,
+          borderDash: [8, 5],
+          fill: false,
+          order: 3
+        },
+        {
+          label: 'Newton iterates',
+          data: newtonPoints,
+          type: 'scatter',
+          backgroundColor: pointColor,
+          borderColor: isLight ? '#ffffff' : '#0e0e0e',
+          borderWidth: 2,
+          pointRadius: 6,
+          pointHoverRadius: 9,
+          order: 2
+        },
+        {
+          label: 'Initial guess x₀',
+          data: x0Point,
+          type: 'scatter',
+          backgroundColor: x0Color,
+          borderColor: isLight ? '#ffffff' : '#0e0e0e',
+          borderWidth: 2,
+          pointRadius: 9,
+          pointStyle: 'rectRot',
+          pointHoverRadius: 12,
+          order: 1
+        },
+        {
+          label: 'Root',
+          data: rootPoint,
+          type: 'scatter',
+          backgroundColor: rootColor,
+          borderColor: isLight ? '#ffffff' : '#0e0e0e',
+          borderWidth: 2.5,
+          pointRadius: 10,
+          pointStyle: 'circle',
+          pointHoverRadius: 14,
+          order: 0
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 400 },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: isLight ? '#ffffff' : '#1a1a1a',
+          titleColor: isLight ? '#5a6874' : '#adaaaa',
+          bodyColor: isLight ? '#11181c' : '#ffffff',
+          borderColor: isLight ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          callbacks: {
+            title: (items) => {
+              if (!items.length) return '';
+              return items[0].dataset.label || '';
+            },
+            label: (item) => {
+              const x = item.parsed?.x;
+              const y = item.parsed?.y;
+              if (x === undefined || y === undefined) return '';
+              return `x = ${Number(x).toFixed(7)}   f(x) = ${Number(y).toExponential(4)}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'linear',
+          title: { display: true, text: 'x', color: tickColor, font: { size: 11 } },
+          ticks: {
+            color: tickColor,
+            callback: (v) => {
+              if (Math.abs(v) >= 1000 || (Math.abs(v) < 0.01 && v !== 0)) return v.toExponential(1);
+              return parseFloat(v.toFixed(4));
+            }
+          },
+          grid: { color: gridColor },
+          min: xMin,
+          max: xMax
+        },
+        y: {
+          type: 'linear',
+          title: { display: true, text: 'f(x)', color: tickColor, font: { size: 11 } },
+          ticks: {
+            color: tickColor,
+            callback: (v) => {
+              if (Math.abs(v) >= 10000 || (Math.abs(v) < 0.001 && v !== 0)) return v.toExponential(1);
+              return parseFloat(v.toFixed(3));
+            }
+          },
+          grid: { color: gridColor },
+          min: finalYMin,
+          max: finalYMax
+        }
+      }
+    }
+  });
+}
+
   function renderStats(rows, converged, diverged) {
     if (!rows.length) return;
     const last = rows[rows.length-1];
@@ -501,7 +747,7 @@
     }
     document.getElementById('badge-err').textContent = (last.err > 0 ? last.err.toExponential(2) : (converged ? '< 1e-15' : '—'));
   }
-  
+
   function renderTable(rows, converged) {
     const tbody = document.getElementById('iter-tbody');
     tbody.innerHTML = '';
@@ -518,10 +764,10 @@
       tbody.appendChild(tr);
     });
   }
-  
+
   function showDiv(msg) { const el = document.getElementById('alert-div'); document.getElementById('alert-div-msg').textContent = msg; el.classList.add('show'); }
   function showWarn(msg) { const el = document.getElementById('alert-warn'); document.getElementById('alert-warn-msg').textContent = msg; el.classList.add('show'); }
-  
+
   function exportCSV() {
     if (!lastRows.length) return;
     const header = 'Step,xn,f(xn),df(xn),Error,Status\n';
@@ -529,7 +775,7 @@
     const blob = new Blob([header+body], { type: 'text/csv' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'newton_iterations.csv'; a.click();
   }
-  
+
   liveKatex();
 </script>
 </body>
