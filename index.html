@@ -13,9 +13,9 @@
     theme: {
       extend: {
         colors: {
-          "primary": "#0dccf2",
+          "primary": "#35b4f9",
           "background-light": "#f3f6f6",
-          "background-dark": "#101f22",
+          "background-dark": "#0d1b2e",
         },
         fontFamily: { "display": ["Inter", "sans-serif"] },
         borderRadius: {
@@ -32,182 +32,195 @@
   body { font-family: 'Inter', sans-serif; }
 
   .circuit-pattern {
-    background-image: radial-gradient(circle at 2px 2px, rgba(13, 204, 242, 0.05) 1px, transparent 0);
+    background-image: radial-gradient(circle at 2px 2px, rgba(53,180,249,0.06) 1px, transparent 0);
     background-size: 24px 24px;
   }
 
-  /* ── NAV: dark ── */
+  /* ── NAV ── */
   .dark .glass-nav {
-    background: rgba(16, 31, 34, 0.92);
+    background: rgba(13,27,46,0.88);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(13, 204, 242, 0.14);
+    border-bottom: 1px solid rgba(53,180,249,0.12);
   }
-
-  /* ── NAV: light ── */
   html:not(.dark) .glass-nav {
-    background: rgba(243, 246, 246, 0.92);
+    background: rgba(243,246,246,0.90);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(13, 204, 242, 0.22);
+    border-bottom: 1px solid rgba(53,180,249,0.18);
   }
-
-  /* ── MOBILE DROPDOWN: dark ── */
   .dark #mobile-menu {
-    background: rgba(16, 31, 34, 0.97);
-    border-top: 1px solid rgba(13, 204, 242, 0.14);
+    background: rgba(13,27,46,0.97);
+    border-top: 1px solid rgba(53,180,249,0.12);
   }
-
-  /* ── MOBILE DROPDOWN: light ── */
   html:not(.dark) #mobile-menu {
-    background: rgba(243, 246, 246, 0.98);
-    border-top: 1px solid rgba(13, 204, 242, 0.18);
+    background: rgba(243,246,246,0.98);
+    border-top: 1px solid rgba(53,180,249,0.16);
   }
-
-  /* hamburger icon color */
   html:not(.dark) #menu-icon { color: #1e293b; }
   .dark #menu-icon            { color: #f1f5f9; }
-
-  /* desktop nav links */
-  html:not(.dark) .nav-link { color: #1e293b; }
-  .dark .nav-link            { color: #e2e8f0; }
-  .nav-link:hover            { color: #0dccf2; }
-
-  /* mobile dropdown links */
+  html:not(.dark) .nav-link   { color: #1e293b; }
+  .dark .nav-link             { color: #e2e8f0; }
+  .nav-link:hover             { color: #35b4f9; }
   html:not(.dark) .mobile-link { color: #1e293b; }
-  .dark .mobile-link            { color: #e2e8f0; }
-  .mobile-link:hover            { color: #0dccf2; }
-
-  /* theme toggle button */
+  .dark .mobile-link           { color: #e2e8f0; }
+  .mobile-link:hover           { color: #35b4f9; }
   html:not(.dark) #theme-toggle-btn,
   html:not(.dark) #mobile-theme-btn {
-    background: rgba(0,0,0,0.06);
-    border: 1px solid rgba(0,0,0,0.10);
+    background: rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.10);
   }
   .dark #theme-toggle-btn,
   .dark #mobile-theme-btn {
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.10);
   }
-
-  /* mobile menu transition */
   #mobile-menu {
     transition: max-height 0.3s ease, opacity 0.3s ease;
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
+    max-height: 0; opacity: 0; overflow: hidden;
   }
-  #mobile-menu.open {
-    max-height: 400px;
-    opacity: 1;
+  #mobile-menu.open { max-height: 440px; opacity: 1; }
+
+  /* ── Glassmorphism ── */
+  .glass-card {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .dark .glass-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(53,180,249,0.09);
+  }
+  html:not(.dark) .glass-card {
+    background: rgba(255,255,255,0.75);
+    border: 1px solid rgba(53,180,249,0.13);
+    box-shadow: 0 2px 16px rgba(53,180,249,0.05);
+  }
+  .glass-card:hover {
+    border-color: rgba(53,180,249,0.30) !important;
+    box-shadow: 0 8px 32px rgba(53,180,249,0.10);
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes floatY {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-12px); }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(22px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.12s; }
+  .reveal-delay-2 { transition-delay: 0.24s; }
+  .reveal-delay-3 { transition-delay: 0.36s; }
+
+  .blob-float      { animation: floatY 7s ease-in-out infinite; }
+  .blob-float-slow { animation: floatY 10s ease-in-out infinite reverse; }
+
+  .skill-tag { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+  .skill-tag:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(53,180,249,0.15);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .blob-float, .blob-float-slow { animation: none !important; transition: none !important; opacity: 1; transform: none; }
+    .skill-tag:hover { transform: none; }
   }
 </style>
 </head>
-<body class="bg-[#f3f6f6] dark:bg-[#101f22] text-slate-900 dark:text-slate-100 font-display transition-colors duration-300">
+<body class="bg-[#f3f6f6] dark:bg-[#0d1b2e] text-slate-900 dark:text-slate-100 font-display transition-colors duration-300">
 
 <!-- Sticky Navigation -->
 <nav class="fixed top-0 w-full z-50 glass-nav transition-colors">
   <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-
-    <!-- Logo -->
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-3" translate="no">
       <div class="size-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary border border-primary/20">
-        <span class="material-symbols-outlined text-2xl">terminal</span>
+        <span class="material-symbols-outlined text-2xl" aria-hidden="true">terminal</span>
       </div>
       <span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">toni<span class="text-primary">.dev</span></span>
     </div>
-
-    <!-- Desktop Menu -->
     <div class="hidden md:flex items-center gap-8">
       <a class="nav-link text-sm font-medium transition-colors" href="#projects">Projects</a>
       <a class="nav-link text-sm font-medium transition-colors" href="#experience">Experience</a>
       <a class="nav-link text-sm font-medium transition-colors" href="#skills">Skills</a>
-
-      <!-- Theme toggle -->
       <button id="theme-toggle-btn" class="p-2 rounded-full hover:bg-primary/20 transition-all" aria-label="Toggle theme">
-        <span id="theme-icon" class="material-symbols-outlined text-primary text-xl">dark_mode</span>
+        <span id="theme-icon" class="material-symbols-outlined text-primary text-xl" aria-hidden="true">dark_mode</span>
       </button>
-
-      <a class="px-5 py-2.5 bg-primary text-[#101f22] font-bold rounded-lg hover:brightness-110 transition-all text-sm" href="#contact">
-        Get in Touch
-      </a>
+      <a class="px-5 py-2.5 bg-primary text-[#0a1520] font-bold rounded-lg hover:brightness-110 transition-all text-sm" href="#contact">Get in Touch</a>
     </div>
-
-    <!-- Mobile controls -->
     <div class="flex items-center gap-3 md:hidden">
       <button id="mobile-theme-btn" class="p-2 rounded-full transition-all" aria-label="Toggle theme">
-        <span id="mobile-theme-icon" class="material-symbols-outlined text-primary text-xl">dark_mode</span>
+        <span id="mobile-theme-icon" class="material-symbols-outlined text-primary text-xl" aria-hidden="true">dark_mode</span>
       </button>
       <button id="menu-toggle" class="focus:outline-none" aria-label="Toggle menu" aria-expanded="false">
-        <span id="menu-icon" class="material-symbols-outlined text-3xl transition-colors">menu</span>
+        <span id="menu-icon" class="material-symbols-outlined text-3xl transition-colors" aria-hidden="true">menu</span>
       </button>
     </div>
   </div>
-
-  <!-- Mobile Dropdown -->
-  <div id="mobile-menu" class="md:hidden">
+  <div id="mobile-menu" class="md:hidden" role="navigation" aria-label="Mobile menu">
     <div class="flex flex-col px-6 py-4 gap-4">
       <a class="mobile-link text-sm font-medium transition-colors py-2" href="#projects"   onclick="closeMobileMenu()">Projects</a>
       <a class="mobile-link text-sm font-medium transition-colors py-2" href="#experience" onclick="closeMobileMenu()">Experience</a>
       <a class="mobile-link text-sm font-medium transition-colors py-2" href="#skills"     onclick="closeMobileMenu()">Skills</a>
-      <a class="px-5 py-3 bg-primary text-[#101f22] font-bold rounded-lg hover:brightness-110 transition-all text-sm text-center" href="#contact" onclick="closeMobileMenu()">
-        Get in Touch
-      </a>
+      <a class="px-5 py-3 bg-primary text-[#0a1520] font-bold rounded-lg hover:brightness-110 transition-all text-sm text-center" href="#contact" onclick="closeMobileMenu()">Get in Touch</a>
     </div>
   </div>
 </nav>
 
 <main class="pt-20">
 
-<!-- Hero Section -->
+<!-- Hero -->
 <section class="relative min-h-[85vh] flex items-center overflow-hidden circuit-pattern">
-  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#101f22]/50 to-[#101f22] pointer-events-none dark:block hidden"></div>
-  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#f3f6f6]/30 to-transparent pointer-events-none dark:hidden block"></div>
-  <div class="absolute right-[-10%] top-[10%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none"></div>
-  <div class="absolute left-[-5%] bottom-[10%] w-[300px] h-[300px] bg-primary/5 rounded-full blur-[80px] pointer-events-none"></div>
+  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#0d1b2e]/50 to-[#0d1b2e] pointer-events-none dark:block hidden" aria-hidden="true"></div>
+  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#f3f6f6]/20 to-transparent pointer-events-none dark:hidden block" aria-hidden="true"></div>
+  <div class="absolute right-[-10%] top-[10%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none blob-float" aria-hidden="true"></div>
+  <div class="absolute left-[-5%] bottom-[10%] w-[300px] h-[300px] bg-primary/5 rounded-full blur-[80px] pointer-events-none blob-float-slow" aria-hidden="true"></div>
 
   <div class="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center py-16">
-    <!-- Left: Text -->
     <div class="space-y-8">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest">
-        <span class="relative flex h-2 w-2">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest animate-[fadeInUp_0.6s_ease_0.1s_forwards] opacity-0">
+        <span class="relative flex h-2 w-2" aria-hidden="true">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
           <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
         </span>
         Available for New Projects
       </div>
-      <h1 class="text-4xl sm:text-5xl lg:text-7xl font-black leading-[1.1] tracking-tight text-slate-900 dark:text-white">
+      <h1 class="text-4xl sm:text-5xl lg:text-7xl font-black leading-[1.1] tracking-tight text-slate-900 dark:text-white animate-[fadeInUp_0.6s_ease_0.2s_forwards] opacity-0">
         Building the Future through <span class="text-primary">Code</span> &amp; <span class="text-primary">Design</span>
       </h1>
-      <p class="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed">
-        Computer Engineering student specializing in Machine Learning, RF systems, and embedded system design, with hands-on experience in communication protocols (UART, SPI, I²C) and efficient hardware–software integration. Passionate about intelligent systems, signal processing, and scalable system architectures.
+      <p class="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed animate-[fadeInUp_0.6s_ease_0.3s_forwards] opacity-0">
+        Computer Engineering student specializing in Machine Learning, RF systems, and embedded system design, with hands-on experience in communication protocols (UART, SPI, I²C) and efficient hardware–software integration.
       </p>
-      <div class="flex flex-wrap gap-4">
-        <a href="#projects" class="flex items-center gap-2 min-w-[160px] justify-center px-8 py-4 bg-primary text-[#101f22] font-black rounded-lg hover:brightness-110 transition-all shadow-lg shadow-primary/20">
+      <div class="flex flex-wrap gap-4 animate-[fadeInUp_0.6s_ease_0.4s_forwards] opacity-0">
+        <a href="#projects" class="flex items-center gap-2 min-w-[160px] justify-center px-8 py-4 bg-primary text-[#0a1520] font-black rounded-lg hover:brightness-110 transition-all shadow-lg shadow-primary/20">
           <span>View My Work</span>
-          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          <span class="material-symbols-outlined text-sm" aria-hidden="true">arrow_forward</span>
         </a>
         <a href="https://github.com/TONI7008" target="_blank" rel="noopener noreferrer"
            class="flex items-center gap-2 min-w-[160px] justify-center px-8 py-4 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-slate-800 dark:text-white font-bold rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition-all">
-          Download CV
+          GitHub / CV
         </a>
       </div>
     </div>
 
-    <!-- Right: Image + Code Block -->
-    <div class="relative mt-8 lg:mt-0">
+    <div class="relative mt-8 lg:mt-0 animate-[fadeInUp_0.6s_ease_0.3s_forwards] opacity-0">
       <div class="relative z-10 rounded-xl overflow-hidden border border-white/10 shadow-2xl">
-        <img alt="Code editor background" class="w-full h-auto"
+        <img alt="Code editor background" class="w-full h-auto" width="640" height="360"
              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwl01Vj4xcx1QaaRgHnxLq2Zqb94XCk-80FmqrwEIJINl68Ra16Edo6mvKrnAGbzHGp0u_4G95e_0ZgFgJqgAwJXqGu6jnGZ81fMBnrYkcb7NJ9vT74iaMAkxmbYYIubOUWAzfDr_yf_Na_TrKS5aZP_4749LllBn0bZaS82Bx6WnnK6tOmJMqrNAfh1v39YmVNjiJf-Iw0nozChTYoCuQIBL2mSh_GfyW5qO4wEM5K7SmNfGoDhV2sfckUVdcFxxmonWwgIDfvWg"/>
-        <div class="absolute inset-0 bg-gradient-to-t from-[#101f22] via-transparent to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#0d1b2e] via-transparent to-transparent" aria-hidden="true"></div>
       </div>
-      <div class="relative lg:absolute mt-4 lg:mt-0 lg:-bottom-6 lg:-left-6 mx-auto lg:mx-0 max-w-[340px] w-full bg-[#0c1a1d]/90 backdrop-blur-xl border border-primary/20 rounded-2xl shadow-2xl shadow-primary/10 p-6 z-20 transition-transform duration-500 hover:scale-[1.02]">
-        <div class="flex gap-1.5 mb-4">
+      <div class="relative lg:absolute mt-4 lg:mt-0 lg:-bottom-6 lg:-left-6 mx-auto lg:mx-0 max-w-[340px] w-full bg-[#0a1626]/90 backdrop-blur-xl border border-primary/20 rounded-2xl shadow-2xl shadow-primary/10 p-6 z-20 transition-transform duration-500 hover:scale-[1.02]">
+        <div class="flex gap-1.5 mb-4" aria-hidden="true">
           <div class="size-2.5 rounded-full bg-red-500/50"></div>
           <div class="size-2.5 rounded-full bg-yellow-500/50"></div>
           <div class="size-2.5 rounded-full bg-green-500/50"></div>
         </div>
-        <code class="text-xs text-primary/80 block font-mono whitespace-pre-wrap break-words">struct Engineer {
+        <code class="text-xs text-primary/80 block font-mono whitespace-pre-wrap break-words" translate="no">struct Engineer {
   std::string focus = "ML &amp; RF Systems";
   std::vector&lt;std::string&gt; stack = {
     "C++", "Python", "VHDL"
@@ -220,75 +233,73 @@
   </div>
 </section>
 
-<!-- Technical Skills Section -->
-<section class="py-12 bg-[#f3f6f6] dark:bg-[#0c1a1d]" id="skills">
-  <div class="max-w-7xl mx-auto px-6 text-center mb-12">
+<!-- Skills -->
+<section class="py-16 bg-[#f3f6f6] dark:bg-[#0a1626]" id="skills">
+  <div class="max-w-7xl mx-auto px-6 text-center mb-12 reveal">
     <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-3">Technical Proficiency</h2>
     <div class="w-12 h-1 bg-primary mx-auto rounded-full"></div>
   </div>
   <div class="max-w-7xl mx-auto px-6">
     <div class="grid md:grid-cols-2 gap-6 items-start">
 
-      <!-- Left: Languages & Spoken -->
       <div class="space-y-6">
-        <div>
+        <div class="reveal">
           <h3 class="text-xl font-black text-slate-900 dark:text-white mb-3">Languages</h3>
-          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">terminal</span><span class="font-bold uppercase tracking-wide">Python</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">code</span><span class="font-bold uppercase tracking-wide">C</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">code</span><span class="font-bold uppercase tracking-wide">C++</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">hardware</span><span class="font-bold uppercase tracking-wide">VHDL</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">smart_display</span><span class="font-bold uppercase tracking-wide">Java</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">html</span><span class="font-bold uppercase tracking-wide">HTML</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">palette</span><span class="font-bold uppercase tracking-wide">CSS</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">javascript</span><span class="font-bold uppercase tracking-wide">JavaScript</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">database</span><span class="font-bold uppercase tracking-wide">SQL</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">code_blocks</span><span class="font-bold uppercase tracking-wide">C#</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">menu_book</span><span class="font-bold uppercase tracking-wide">LaTeX</span></div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3" translate="no">
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">terminal</span><span class="font-bold uppercase tracking-wide">Python</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">code</span><span class="font-bold uppercase tracking-wide">C</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">code</span><span class="font-bold uppercase tracking-wide">C++</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">hardware</span><span class="font-bold uppercase tracking-wide">VHDL</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">smart_display</span><span class="font-bold uppercase tracking-wide">Java</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">html</span><span class="font-bold uppercase tracking-wide">HTML</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">palette</span><span class="font-bold uppercase tracking-wide">CSS</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">javascript</span><span class="font-bold uppercase tracking-wide">JavaScript</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">database</span><span class="font-bold uppercase tracking-wide">SQL</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">code_blocks</span><span class="font-bold uppercase tracking-wide">C#</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">menu_book</span><span class="font-bold uppercase tracking-wide">LaTeX</span></div>
           </div>
         </div>
-        <div>
+        <div class="reveal reveal-delay-1">
           <h3 class="text-xl font-black text-slate-900 dark:text-white mb-3">Spoken Languages</h3>
           <div class="grid grid-cols-2 gap-3">
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">record_voice_over</span><span class="font-bold">English (Intermediate)</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">record_voice_over</span><span class="font-bold">French (Fluent)</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">record_voice_over</span><span class="font-bold">English (Intermediate)</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">record_voice_over</span><span class="font-bold">French (Fluent)</span></div>
           </div>
         </div>
       </div>
 
-      <!-- Right: Technologies, Tools, Concepts -->
       <div class="space-y-6">
-        <div>
+        <div class="reveal reveal-delay-1">
           <h3 class="text-xl font-black text-slate-900 dark:text-white mb-3">Technologies</h3>
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">memory</span><span class="font-bold uppercase tracking-wide">JTAG Debuggers</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">settings_ethernet</span><span class="font-bold uppercase tracking-wide">Protocols (SPI, UART, I2C, CAN)</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">device_hub</span><span class="font-bold uppercase tracking-wide">FPGA</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">monitor</span><span class="font-bold uppercase tracking-wide">Oscilloscope</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">build</span><span class="font-bold uppercase tracking-wide">Soldering</span></div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" translate="no">
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">memory</span><span class="font-bold uppercase tracking-wide">JTAG Debuggers</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">settings_ethernet</span><span class="font-bold uppercase tracking-wide">SPI / UART / I2C / CAN</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">device_hub</span><span class="font-bold uppercase tracking-wide">FPGA</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">monitor</span><span class="font-bold uppercase tracking-wide">Oscilloscope</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">build</span><span class="font-bold uppercase tracking-wide">Soldering</span></div>
           </div>
         </div>
-        <div>
+        <div class="reveal reveal-delay-2">
           <h3 class="text-xl font-black text-slate-900 dark:text-white mb-3">Tools</h3>
-          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">developer_board</span><span class="font-bold uppercase tracking-wide">Arduino IDE</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">laptop</span><span class="font-bold uppercase tracking-wide">VSCode</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">merge_type</span><span class="font-bold uppercase tracking-wide">Git</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">widgets</span><span class="font-bold uppercase tracking-wide">Qt</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">construction</span><span class="font-bold uppercase tracking-wide">CMake</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">developer_mode</span><span class="font-bold uppercase tracking-wide">Intel Quartus Prime</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">laptop_windows</span><span class="font-bold uppercase tracking-wide">Visual Studio</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">functions</span><span class="font-bold uppercase tracking-wide">MATLAB</span></div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3" translate="no">
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">developer_board</span><span class="font-bold uppercase tracking-wide">Arduino IDE</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">laptop</span><span class="font-bold uppercase tracking-wide">VSCode</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">merge_type</span><span class="font-bold uppercase tracking-wide">Git</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">widgets</span><span class="font-bold uppercase tracking-wide">Qt</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">construction</span><span class="font-bold uppercase tracking-wide">CMake</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">developer_mode</span><span class="font-bold uppercase tracking-wide">Intel Quartus</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">laptop_windows</span><span class="font-bold uppercase tracking-wide">Visual Studio</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">functions</span><span class="font-bold uppercase tracking-wide">MATLAB</span></div>
           </div>
         </div>
-        <div>
+        <div class="reveal reveal-delay-3">
           <h3 class="text-xl font-black text-slate-900 dark:text-white mb-3">Concepts</h3>
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">account_tree</span><span class="font-bold">System Design</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">router</span><span class="font-bold">Computer Networking</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">layers</span><span class="font-bold">Distributed Systems</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">api</span><span class="font-bold">REST APIs</span></div>
-            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#101f22] border border-slate-200 dark:border-white/5 shadow-sm text-xs"><span class="material-symbols-outlined text-primary">checklist_rtl</span><span class="font-bold">Unit Testing</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">account_tree</span><span class="font-bold">System Design</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">router</span><span class="font-bold">Computer Networking</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">layers</span><span class="font-bold">Distributed Systems</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">api</span><span class="font-bold">REST APIs</span></div>
+            <div class="skill-tag flex items-center gap-2 px-3 py-2 rounded-lg glass-card text-xs"><span class="material-symbols-outlined text-primary" aria-hidden="true">checklist_rtl</span><span class="font-bold">Unit Testing</span></div>
           </div>
         </div>
       </div>
@@ -297,69 +308,116 @@
   </div>
 </section>
 
-<!-- Featured Projects Section -->
-<section class="py-24 bg-[#f3f6f6] dark:bg-[#101f22]" id="projects">
+<!-- Education & Experience -->
+<section class="py-20 bg-[#f3f6f6] dark:bg-[#0d1b2e]" id="experience">
   <div class="max-w-7xl mx-auto px-6">
-    <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+    <div class="text-center mb-14 reveal">
+      <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-3">Education &amp; Background</h2>
+      <div class="w-12 h-1 bg-primary mx-auto rounded-full"></div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-8">
+      <div class="glass-card rounded-2xl p-8 reveal">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="size-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary shrink-0">
+            <span class="material-symbols-outlined" aria-hidden="true">school</span>
+          </div>
+          <div>
+            <p class="text-xs font-bold uppercase tracking-widest text-primary">Education</p>
+            <h3 class="text-lg font-black text-slate-900 dark:text-white">B.Eng Computer Engineering</h3>
+          </div>
+        </div>
+        <div class="pl-2 border-l-2 border-primary/20 pl-4">
+          <p class="font-bold text-slate-900 dark:text-white">Université du Québec en Outaouais</p>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">2022 – Present</p>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+            Specializing in Machine Learning, RF systems, and embedded system design. Focus on digital signal processing, FPGA design, and hardware–software co-design.
+          </p>
+        </div>
+      </div>
+      <div class="glass-card rounded-2xl p-8 reveal reveal-delay-1">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="size-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary shrink-0">
+            <span class="material-symbols-outlined" aria-hidden="true">workspace_premium</span>
+          </div>
+          <div>
+            <p class="text-xs font-bold uppercase tracking-widest text-primary">Research Focus</p>
+            <h3 class="text-lg font-black text-slate-900 dark:text-white">Key Domains</h3>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="flex items-center gap-2 p-3 rounded-xl bg-primary/5 border border-primary/10 hover:border-primary/25 transition-colors">
+            <span class="material-symbols-outlined text-primary text-sm shrink-0" aria-hidden="true">psychology</span>
+            <span class="text-sm font-bold text-slate-900 dark:text-white">Machine Learning</span>
+          </div>
+          <div class="flex items-center gap-2 p-3 rounded-xl bg-primary/5 border border-primary/10 hover:border-primary/25 transition-colors">
+            <span class="material-symbols-outlined text-primary text-sm shrink-0" aria-hidden="true">wifi_tethering</span>
+            <span class="text-sm font-bold text-slate-900 dark:text-white">RF Systems</span>
+          </div>
+          <div class="flex items-center gap-2 p-3 rounded-xl bg-primary/5 border border-primary/10 hover:border-primary/25 transition-colors">
+            <span class="material-symbols-outlined text-primary text-sm shrink-0" aria-hidden="true">developer_board</span>
+            <span class="text-sm font-bold text-slate-900 dark:text-white">Embedded Systems</span>
+          </div>
+          <div class="flex items-center gap-2 p-3 rounded-xl bg-primary/5 border border-primary/10 hover:border-primary/25 transition-colors">
+            <span class="material-symbols-outlined text-primary text-sm shrink-0" aria-hidden="true">signal_cellular_alt</span>
+            <span class="text-sm font-bold text-slate-900 dark:text-white">Signal Processing</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section class="py-24 bg-[#f3f6f6] dark:bg-[#0d1b2e]" id="projects">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 reveal">
       <div>
         <h2 class="text-3xl lg:text-4xl font-black text-slate-900 dark:text-white mb-4">Featured Projects</h2>
-        <p class="text-slate-600 dark:text-slate-400 max-w-lg">
-          A selection of complex systems I've architected and implemented from the ground up.
-        </p>
+        <p class="text-slate-600 dark:text-slate-400 max-w-lg">A selection of complex systems I've architected and implemented from the ground up.</p>
       </div>
-      <a class="text-primary font-bold hover:underline flex items-center gap-2" href="https://toni7008.github.io/projets/index.html">
-        View All Projects <span class="material-symbols-outlined text-sm">open_in_new</span>
+      <a class="text-primary font-bold hover:underline flex items-center gap-2 shrink-0" href="projets/index.html">
+        View All Projects <span class="material-symbols-outlined text-sm" aria-hidden="true">open_in_new</span>
       </a>
     </div>
     <div class="grid md:grid-cols-2 gap-8">
 
-      <!-- Project 1 -->
-      <div class="group relative bg-white dark:bg-[#162a2e] rounded-2xl overflow-hidden border border-slate-200 dark:border-white/5 hover:border-primary/30 transition-all duration-300">
+      <div class="group relative glass-card rounded-2xl overflow-hidden reveal">
         <div class="aspect-video relative overflow-hidden">
-          <img alt="Neonatal Monitoring System"
-               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          <img alt="Neonatal Monitoring System" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" width="640" height="360"
                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZ5v7-a_hcprPDnRHKpytA5upM_OagQdZ99XHX0HVfkpQFlxrQvZIeMuw3NlT2jA60HLE-XdQhptOX2xbOyrJdwEets8cGt0KGO9Oujw7DtyKIGZP3wu-6yIRl7KyE8Bu2R-QHKfe7UaWXLCqcu_p5UjmJWl839M55Z5HahPS6Nh49rT0XY4LgYVHEUKYIEfeV1YYd4TOHOEHSTJlhQjuCeurUs8Q6SOm6NIVLq49wWwLwoXnBksgPk77U1YlMY4ts28Lff1DIn2c"/>
-          <div class="absolute inset-0 bg-[#101f22]/20 group-hover:bg-[#101f22]/0 transition-colors"></div>
+          <div class="absolute inset-0 bg-[#0d1b2e]/20 group-hover:bg-transparent transition-colors" aria-hidden="true"></div>
         </div>
         <div class="p-8">
-          <div class="flex gap-2 mb-4 flex-wrap">
+          <div class="flex gap-2 mb-4 flex-wrap" translate="no">
             <span class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase rounded">IoT</span>
             <span class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase rounded">VHDL</span>
             <span class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase rounded">C++</span>
             <span class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase rounded">React</span>
           </div>
           <h3 class="text-2xl font-black text-slate-900 dark:text-white mb-3">Neonatal Monitoring IoT Module</h3>
-          <p class="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
-            FPGA-based monitoring system designed to prevent sudden infant death syndrome (SIDS). Tracks vital data including body temperature, heart rate, gas levels, and ambient temperature. Features real-time Firebase synchronization and mobile alerts for abnormal conditions.
-          </p>
-          <a href="https://github.com/TONI7008/watch_the_baby" target="_blank" rel="noopener noreferrer"
-             class="flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all">
-            View Case Study <span class="material-symbols-outlined">trending_flat</span>
+          <p class="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">FPGA-based monitoring system designed to prevent sudden infant death syndrome (SIDS). Tracks vital data including body temperature, heart rate, gas levels, and ambient temperature.</p>
+          <a href="https://github.com/TONI7008/watch_the_baby" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all">
+            View Case Study <span class="material-symbols-outlined" aria-hidden="true">trending_flat</span>
           </a>
         </div>
       </div>
 
-      <!-- Project 2 -->
-      <div class="group relative bg-white dark:bg-[#162a2e] rounded-2xl overflow-hidden border border-slate-200 dark:border-white/5 hover:border-primary/30 transition-all duration-300">
+      <div class="group relative glass-card rounded-2xl overflow-hidden reveal reveal-delay-1">
         <div class="aspect-video relative overflow-hidden">
-          <img alt="Multiplayer Checkers Game"
-               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          <img alt="Multiplayer Checkers Game" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" width="640" height="360"
                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8xPq-FJpNxgg8UTzMh67wYc7Cd5DPO-Mp_iB-EoynvepA5y8EMIJTAbzYwbUKw7b2qOv7QNLgQVna9D3-HwqsMV0UB2FmO5--s_QuesnuOpvwwQo8b6-E3_AOzMEThSmzfw2rwYLdyL57CxWKlqOze_cuwg8n5ddlF-3C8sC1bAMlZSSWEYg7AzHKHUVNW94TSboIh6h0_HPurPH_VRfIRqT_ccqB1ZiWQ9tm5UdLXbeA7BED-8ghBdbSEQ1-ilK5tFz-rd1EpFc"/>
-          <div class="absolute inset-0 bg-[#101f22]/20 group-hover:bg-[#101f22]/0 transition-colors"></div>
+          <div class="absolute inset-0 bg-[#0d1b2e]/20 group-hover:bg-transparent transition-colors" aria-hidden="true"></div>
         </div>
         <div class="p-8">
-          <div class="flex gap-2 mb-4 flex-wrap">
+          <div class="flex gap-2 mb-4 flex-wrap" translate="no">
             <span class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase rounded">Game Development</span>
             <span class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase rounded">C++</span>
             <span class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase rounded">Qt</span>
           </div>
           <h3 class="text-2xl font-black text-slate-900 dark:text-white mb-3">Multiplayer Checkers Game</h3>
-          <p class="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
-            Real-time multiplayer checkers with intelligent AI opponent using Minimax algorithm with alpha-beta pruning and transposition table. Features dynamic movement tracking, asynchronous move broadcasting, and custom graphical rendering in C++/Qt.
-          </p>
-          <a href="https://github.com/TONI7008/Checkers" target="_blank" rel="noopener noreferrer"
-             class="flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all">
-            View Case Study <span class="material-symbols-outlined">trending_flat</span>
+          <p class="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">Real-time multiplayer checkers with intelligent AI opponent using Minimax algorithm with alpha-beta pruning and transposition table. Custom graphical rendering in C++/Qt.</p>
+          <a href="https://github.com/TONI7008/Checkers" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all">
+            View Case Study <span class="material-symbols-outlined" aria-hidden="true">trending_flat</span>
           </a>
         </div>
       </div>
@@ -368,18 +426,15 @@
   </div>
 </section>
 
-<!-- CTA Section -->
+<!-- CTA -->
 <section class="py-24 max-w-7xl mx-auto px-6" id="contact">
-  <div class="bg-primary rounded-3xl p-12 text-center space-y-8 relative overflow-hidden shadow-2xl shadow-primary/10">
-    <div class="absolute inset-0 opacity-10 pointer-events-none circuit-pattern"></div>
-    <h2 class="text-4xl md:text-5xl font-black text-[#101f22] relative z-10">Ready to build something extraordinary?</h2>
-    <p class="text-[#101f22]/80 text-lg max-w-2xl mx-auto font-medium relative z-10">
-      I'm currently open to freelance opportunities and senior engineering positions. Let's discuss your vision.
-    </p>
+  <div class="bg-primary rounded-3xl p-12 text-center space-y-8 relative overflow-hidden shadow-2xl shadow-primary/20 reveal">
+    <div class="absolute inset-0 opacity-10 pointer-events-none circuit-pattern" aria-hidden="true"></div>
+    <h2 class="text-4xl md:text-5xl font-black text-[#0a1520] relative z-10">Ready to build something extraordinary?</h2>
+    <p class="text-[#0a1520]/80 text-lg max-w-2xl mx-auto font-medium relative z-10">I'm currently open to freelance opportunities and senior engineering positions. Let's discuss your vision.</p>
     <div class="flex justify-center relative z-10">
-      <a href="mailto:johndoe@gmail.com"
-         class="px-10 py-5 bg-[#101f22] text-white font-black rounded-xl hover:scale-105 transition-transform flex items-center gap-3">
-        <span class="material-symbols-outlined">mail</span>
+      <a href="mailto:tgnmhtt@gmail.com" class="px-10 py-5 bg-[#0d1b2e] text-white font-black rounded-xl hover:scale-105 transition-transform flex items-center gap-3 shadow-lg">
+        <span class="material-symbols-outlined" aria-hidden="true">mail</span>
         Hire Me Now
       </a>
     </div>
@@ -387,25 +442,20 @@
 </section>
 </main>
 
-<!-- Footer -->
 <footer class="border-t border-slate-200 dark:border-white/5 py-12">
   <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
-    <div class="flex items-center gap-3 opacity-60">
+    <div class="flex items-center gap-3 opacity-60" translate="no">
       <span class="text-sm font-bold tracking-tight">toni.dev</span>
       <span class="text-xs">© 2026 All rights reserved.</span>
     </div>
     <div class="flex items-center gap-8">
-      <a class="text-slate-400 hover:text-primary transition-colors flex items-center gap-2 text-sm font-medium"
-         href="https://github.com/TONI7008" target="_blank" rel="noopener noreferrer">GitHub</a>
-      <a class="text-slate-400 hover:text-primary transition-colors flex items-center gap-2 text-sm font-medium"
-         href="https://www.linkedin.com/in/igor-tagne/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-      <a class="text-slate-400 hover:text-primary transition-colors flex items-center gap-2 text-sm font-medium" href="#">Twitter</a>
+      <a class="text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="https://github.com/TONI7008" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a class="text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="https://www.linkedin.com/in/igor-tagne/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
     </div>
   </div>
 </footer>
 
 <script>
-  // ── Theme toggle ──────────────────────────────────────
   const themeToggleBtn  = document.getElementById('theme-toggle-btn');
   const mobileThemeBtn  = document.getElementById('mobile-theme-btn');
   const themeIconSpan   = document.getElementById('theme-icon');
@@ -425,44 +475,39 @@
       if (mobileThemeIcon) mobileThemeIcon.textContent = 'light_mode';
     }
   }
-
-  function toggleTheme() {
-    setTheme(document.documentElement.classList.contains('dark') ? 'light' : 'dark');
-  }
-
-  // Init: respect saved pref, default to dark
+  function toggleTheme() { setTheme(document.documentElement.classList.contains('dark') ? 'light' : 'dark'); }
   setTheme(localStorage.getItem('portfolioTheme') === 'light' ? 'light' : 'dark');
-
   if (themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
   if (mobileThemeBtn) mobileThemeBtn.addEventListener('click', toggleTheme);
 
-  // ── Mobile menu ───────────────────────────────────────
   const menuToggle = document.getElementById('menu-toggle');
   const mobileMenu = document.getElementById('mobile-menu');
   const menuIconEl = document.getElementById('menu-icon');
 
   function closeMobileMenu() {
     mobileMenu.classList.remove('open');
-    menuIconEl.textContent = 'menu';
+    if (menuIconEl) menuIconEl.textContent = 'menu';
     menuToggle.setAttribute('aria-expanded', 'false');
   }
-
   menuToggle.addEventListener('click', () => {
     const isOpen = mobileMenu.classList.contains('open');
-    if (isOpen) {
-      closeMobileMenu();
-    } else {
-      mobileMenu.classList.add('open');
-      menuIconEl.textContent = 'close';
-      menuToggle.setAttribute('aria-expanded', 'true');
-    }
+    if (isOpen) { closeMobileMenu(); }
+    else { mobileMenu.classList.add('open'); if (menuIconEl) menuIconEl.textContent = 'close'; menuToggle.setAttribute('aria-expanded', 'true'); }
+  });
+  document.addEventListener('click', (e) => {
+    if (!menuToggle.contains(e.target) && !mobileMenu.contains(e.target)) closeMobileMenu();
   });
 
-  document.addEventListener('click', (e) => {
-    if (!menuToggle.contains(e.target) && !mobileMenu.contains(e.target)) {
-      closeMobileMenu();
-    }
-  });
+  // Scroll reveal
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reducedMotion) {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  } else {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+  }
 </script>
 </body>
 </html>
