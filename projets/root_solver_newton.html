@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Newton Solver | Advanced Root-Finding Workbench</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.0.0/math.min.js"></script>
@@ -14,11 +14,11 @@
 
     /* Light mode (default CSS) — overridden to dark by JS on load */
     :root {
-      --bg-body: #f5f7fb;
-      --bg-panel: #ffffff;
-      --bg-elevated: #f0f2f5;
-      --border-subtle: rgba(0,0,0,0.08);
-      --border-strong: rgba(0,0,0,0.12);
+      --bg-body: #cbd5e1;
+      --bg-panel: #f4f7fa;
+      --bg-elevated: #e2e8f0;
+      --border-subtle: rgba(2,7,19,0.08);
+      --border-strong: rgba(2,7,19,0.13);
       --text-primary: #11181c;
       --text-secondary: #5a6874;
       --text-muted: #8a99a8;
@@ -37,9 +37,9 @@
     }
 
     html.dark {
-      --bg-body: #0d1b2e;
-      --bg-panel: #0f2037;
-      --bg-elevated: #152840;
+      --bg-body: #020713;
+      --bg-panel: #060d1c;
+      --bg-elevated: #0b1526;
       --border-subtle: rgba(255,255,255,0.05);
       --border-strong: rgba(255,255,255,0.10);
       --text-primary: #ffffff;
@@ -61,7 +61,7 @@
     body {
       background: var(--bg-body);
       color: var(--text-primary);
-      font-family: 'Inter', sans-serif;
+      font-family: 'IBM Plex Sans', sans-serif;
       min-height: 100vh;
       transition: background 0.25s, color 0.2s;
     }
@@ -77,7 +77,7 @@
 
     .top-bar { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; }
     .hero { display:flex; flex-direction:column; gap:0.4rem; }
-    .hero h1 { font-family:'Space Grotesk',sans-serif; font-size:clamp(2rem,5vw,3.5rem); font-weight:700; letter-spacing:-0.03em; color:var(--text-primary); line-height:1; }
+    .hero h1 { font-family:'Chakra Petch',sans-serif; font-size:clamp(2rem,5vw,3.5rem); font-weight:700; letter-spacing:-0.03em; color:var(--text-primary); line-height:1; }
     .hero p { color:var(--text-secondary); font-size:0.9rem; letter-spacing:0.05em; max-width:500px; }
 
     .theme-toggle {
@@ -97,7 +97,7 @@
       backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
     }
     .badge-global span:first-child { font-size:0.6rem; text-transform:uppercase; letter-spacing:0.2em; color:var(--text-secondary); font-weight:700; }
-    .badge-global span:last-child { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.1rem; color:var(--accent-cyan); }
+    .badge-global span:last-child { font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:1.1rem; color:var(--accent-cyan); }
 
     .main-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
     @media (max-width:900px) { .main-grid { grid-template-columns:1fr; } }
@@ -117,7 +117,7 @@
     .section-tag .bar { width:2rem; height:3px; background:var(--accent-cyan); border-radius:2px; }
     .section-tag .bar.blue   { background:var(--accent-blue); }
     .section-tag .bar.purple { background:var(--accent-purple); }
-    .section-tag span { font-family:'Space Grotesk',sans-serif; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.3em; font-weight:700; color:var(--accent-cyan); }
+    .section-tag span { font-family:'Chakra Petch',sans-serif; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.3em; font-weight:700; color:var(--accent-cyan); }
     .section-tag span.blue   { color:var(--accent-blue); }
     .section-tag span.purple { color:var(--accent-purple); }
 
@@ -146,7 +146,7 @@
 
     .run-btn {
       margin-top:1.75rem; width:100%; background:var(--accent-cyan); color:#0a1520 !important;
-      padding:1rem; border-radius:0.75rem; font-family:'Space Grotesk',sans-serif; font-weight:800;
+      padding:1rem; border-radius:0.75rem; font-family:'Chakra Petch',sans-serif; font-weight:800;
       font-size:0.85rem; text-transform:uppercase; letter-spacing:0.2em; cursor:pointer;
       border:none; display:flex; align-items:center; justify-content:center; gap:0.6rem;
       transition:all 0.2s; box-shadow:0 8px 24px var(--shadow-cyan);
@@ -164,7 +164,7 @@
     .stat-item { padding:0.5rem 1rem; text-align:center; }
     .stat-item+.stat-item { border-left:1px solid var(--border-subtle); }
     .stat-label { font-size:0.55rem; text-transform:uppercase; letter-spacing:0.2em; color:var(--text-secondary); font-weight:700; margin-bottom:0.3rem; }
-    .stat-val { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.5rem; color:var(--text-primary); }
+    .stat-val { font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:1.5rem; color:var(--text-primary); }
     .stat-val.ok  { color:var(--accent-cyan); }
     .stat-val.err { color:var(--danger); }
 
@@ -217,13 +217,33 @@
     .row-anim { animation:rowSlide 0.25s ease forwards; opacity:0; }
     @keyframes rowSlide { from{opacity:0;transform:translateY(-5px);} to{opacity:1;transform:translateY(0);} }
 
+    /* Page entrance — panels rise in sequence */
+    @keyframes panelIn { from { opacity:0; transform:translateY(22px); filter:blur(8px); } to { opacity:1; transform:none; filter:none; } }
+    .wrap > * { animation: panelIn 0.7s cubic-bezier(0.16,1,0.3,1) backwards; }
+    .wrap > :nth-child(2) { animation-delay:0.10s; }
+    .wrap > :nth-child(3) { animation-delay:0.18s; }
+    .wrap > :nth-child(4) { animation-delay:0.26s; }
+    .wrap > :nth-child(5) { animation-delay:0.34s; }
+    .wrap > :nth-child(6) { animation-delay:0.42s; }
+    .wrap > :nth-child(7) { animation-delay:0.50s; }
+
+    /* Sheen sweep on the run button */
+    .run-btn { position:relative; overflow:hidden; }
+    .run-btn::after {
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.45) 50%, transparent 65%);
+      transform:translateX(-130%); transition:transform 0.7s ease; pointer-events:none;
+    }
+    .run-btn:hover::after { transform:translateX(130%); }
+
     input[type=number]::-webkit-outer-spin-button,
     input[type=number]::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
 
     @media (prefers-reduced-motion: reduce) {
       .run-btn:hover, .theme-toggle:hover { transform: none; }
       .live-dot { animation: none; }
-      .row-anim { animation: none; opacity: 1; }
+      .row-anim, .wrap > * { animation: none; opacity: 1; }
+      .run-btn::after { display: none; }
     }
   </style>
 </head>
@@ -473,7 +493,7 @@
       data: { labels, datasets: [{ label: '|error|', data: errs, borderColor: lineC, backgroundColor: bgFill, pointBackgroundColor: lineC, pointBorderColor: lineC, pointRadius: 4, pointHoverRadius: 7, tension: 0.35, fill: true, borderWidth: 2.5, borderDash: converged ? [] : [6,4], spanGaps: true }] },
       options: {
         responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: { backgroundColor: isDark() ? '#1a2840' : '#ffffff', titleColor: tickC, bodyColor: isDark() ? '#ffffff' : '#11181c', callbacks: { label: ctx => '|error| = ' + (ctx.parsed.y != null ? ctx.parsed.y.toExponential(4) : '—') } } },
+        plugins: { legend: { display: false }, tooltip: { backgroundColor: isDark() ? '#0b1526' : '#ffffff', titleColor: tickC, bodyColor: isDark() ? '#ffffff' : '#11181c', callbacks: { label: ctx => '|error| = ' + (ctx.parsed.y != null ? ctx.parsed.y.toExponential(4) : '—') } } },
         scales: {
           x: { title: { display:true, text:'Iteration', color:tickC, font:{size:11} }, ticks:{color:tickC}, grid:{color:gridC} },
           y: { type:'logarithmic', title:{display:true,text:'|xₙ₊₁ − xₙ|  (log scale)',color:tickC,font:{size:11}}, ticks:{color:tickC,callback:v=>v.toExponential(0)}, grid:{color:gridC} }
@@ -572,7 +592,7 @@
         plugins: {
           legend: { display:false },
           tooltip: {
-            backgroundColor: dark ? '#1a2840' : '#ffffff', titleColor:tickColor, bodyColor:dark?'#ffffff':'#11181c',
+            backgroundColor: dark ? '#0b1526' : '#ffffff', titleColor:tickColor, bodyColor:dark?'#ffffff':'#11181c',
             borderColor:dark?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.12)', borderWidth:1,
             callbacks: { title:items=>items.length?items[0].dataset.label:'', label:item=>{ const x=item.parsed?.x, y=item.parsed?.y; if(x===undefined||y===undefined) return ''; return `x = ${Number(x).toFixed(7)}   f(x) = ${Number(y).toExponential(4)}`; } }
           }

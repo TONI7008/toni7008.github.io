@@ -1,0 +1,101 @@
+/* ════════════════════════════════════════════════════════════════════════
+   Motion — message entrance, typing-dot wave, status pulse, streaming
+   cursor, button feedback. Kept declarative (CSS classes toggled by JS)
+   so the JS layer never has to fight layout/animation timing.
+   ════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* New message rows fade + rise into place */
+.msg-row {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: msg-in var(--duration-slow) var(--ease-out) forwards;
+}
+@keyframes msg-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Avatar pop */
+.msg-row .avatar {
+  animation: avatar-pop var(--duration-slow) var(--ease-spring) backwards;
+  animation-delay: 60ms;
+}
+@keyframes avatar-pop {
+  from { opacity: 0; transform: scale(.5); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Typing-dots wave (assistant "thinking…") */
+@keyframes typing-wave {
+  0%, 60%, 100% { transform: translateY(0);    opacity: .45; }
+  30%           { transform: translateY(-5px); opacity: 1;   }
+}
+
+/* Streaming cursor — soft blink at the end of live assistant text */
+.stream-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--accent);
+  animation: cursor-blink 1s steps(1) infinite;
+}
+@keyframes cursor-blink {
+  0%, 49%  { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* Connection status dot pulse (while connecting) */
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent); }
+  70%      { box-shadow: 0 0 0 6px transparent; }
+}
+
+/* Sidebar history rows cascade in on refresh */
+.history-item {
+  animation: row-in var(--duration-normal) var(--ease-out) backwards;
+}
+@keyframes row-in {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Settings drawer field stagger */
+.settings-form .field,
+.settings-form .settings-hint {
+  animation: field-in var(--duration-normal) var(--ease-out) backwards;
+}
+@keyframes field-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Attachment thumbnails pop in */
+.attachment-thumb {
+  animation: thumb-in var(--duration-fast) var(--ease-spring) backwards;
+}
+@keyframes thumb-in {
+  from { opacity: 0; transform: scale(.7); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Send button "lift" while a response is streaming */
+.send-btn.is-busy { animation: busy-pulse 1.6s ease-in-out infinite; }
+@keyframes busy-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-soft); }
+  50%      { box-shadow: 0 0 0 8px transparent; }
+}
+
+/* Generic fade utility (used for empty-state swap, toasts, etc.) */
+.fade-in  { animation: fade-in  var(--duration-normal) var(--ease-out) both; }
+.fade-out { animation: fade-out var(--duration-fast)   var(--ease-out) both; }
+@keyframes fade-in  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }

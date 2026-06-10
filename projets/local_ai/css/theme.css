@@ -1,0 +1,150 @@
+/* ════════════════════════════════════════════════════════════════════════
+   Design tokens — single source of truth for color, spacing, radius and
+   motion. Swapping [data-theme] on <html> repaints the whole app because
+   every other stylesheet only ever reads these custom properties.
+   ════════════════════════════════════════════════════════════════════════ */
+
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Surfaces, darkest → lightest */
+  --bg:            #020713;
+  --surface:       #060d1c;   /* sidebar, header, composer            */
+  --surface-2:     #0b1526;   /* assistant bubble, inputs, cards      */
+  --surface-3:     #101e33;   /* history items, hover states          */
+  --surface-raised:#13233c;   /* user bubble                           */
+  --overlay:       rgba(0, 0, 0, 0.55);
+
+  /* Text */
+  --text-primary:   #ececec;
+  --text-secondary: #b4b4b4;
+  --text-muted:     #8a8a8a;
+  --text-on-accent: #ffffff;
+
+  /* Borders / separators */
+  --border:        rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  /* Accent (gradient pair used for the assistant avatar / focus rings) */
+  --accent:       #35b4f9;
+  --accent-alt:   #7dd3fc;
+  --accent-soft:  rgba(53, 180, 249, 0.16);
+
+  /* Status */
+  --success: #3fb950;
+  --danger:  #f85149;
+  --danger-soft: rgba(248, 81, 73, 0.14);
+
+  /* Code blocks stay dark in both themes — matches the way most chat UIs
+     keep syntax highlighting legible regardless of the surrounding theme. */
+  --code-bg:   #0d0d0d;
+  --code-text: #cdd6f4;
+  --hljs-theme-href: "https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-dark.min.css";
+
+  /* Shadows / elevation */
+  --shadow-color: rgba(0, 0, 0, 0.45);
+  --shadow-sm: 0 2px 10px var(--shadow-color);
+  --shadow-md: 0 8px 28px var(--shadow-color);
+  --shadow-lg: 0 18px 48px var(--shadow-color);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --bg:             #cbd5e1;
+  --surface:        #f4f7fa;
+  --surface-2:      #e7edf3;
+  --surface-3:      #dde5ee;
+  --surface-raised: #e2ecf7;
+  --overlay:        rgba(2, 7, 19, 0.35);
+
+  --text-primary:   #11181c;
+  --text-secondary: #4c5a66;
+  --text-muted:     #7b8a98;
+  --text-on-accent: #ffffff;
+
+  --border:        rgba(2, 7, 19, 0.10);
+  --border-strong: rgba(2, 7, 19, 0.18);
+
+  --accent:      #0d7acc;
+  --accent-alt:  #38bdf8;
+  --accent-soft: rgba(13, 122, 204, 0.12);
+
+  --success: #1a7f37;
+  --danger:  #cf222e;
+  --danger-soft: rgba(207, 34, 46, 0.10);
+
+  --code-bg:   #1e1e1e;
+  --code-text: #d4d4d4;
+  --hljs-theme-href: "https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-light.min.css";
+
+  --shadow-color: rgba(2, 7, 19, 0.16);
+  --shadow-sm: 0 2px 10px var(--shadow-color);
+  --shadow-md: 0 8px 28px var(--shadow-color);
+  --shadow-lg: 0 18px 48px var(--shadow-color);
+}
+
+:root {
+  /* Radii — three sizes, used everywhere */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  /* Spacing — 4px grid */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* Motion */
+  --duration-fast:   140ms;
+  --duration-normal: 240ms;
+  --duration-slow:   420ms;
+  --ease-out: cubic-bezier(.22, .61, .36, 1);
+  --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+
+  /* Typography */
+  --font-sans: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Chakra Petch", "IBM Plex Sans", sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Code", "Fira Code", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --sidebar-width: 280px;
+  --sidebar-width-collapsed: 0px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  /* Smoothly cross-fade every surface/text color when the theme flips */
+  transition: background var(--duration-slow) var(--ease-out),
+              color var(--duration-slow) var(--ease-out);
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--text-primary);
+}
+
+/* Scrollbars — slim, theme-aware, unobtrusive (mirrors the Qt QSS rules) */
+* { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-pill);
+}
+*::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }

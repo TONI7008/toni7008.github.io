@@ -4,15 +4,16 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Minesweeper</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   /* ── Dark mode (default) ── */
   :root {
-    --bg:        #0d1b2e;
-    --pattern:   rgba(53,180,249,0.12);
+    --bg:        #020713;
+    --pattern:   rgba(148,163,184,0.07);
     --blur:      28px;
-    --glass:     rgba(255,255,255,0.06);
-    --glass-border: rgba(255,255,255,0.16);
-    --glass-highlight: rgba(255,255,255,0.20);
+    --glass:     rgba(255,255,255,0.05);
+    --glass-border: rgba(255,255,255,0.13);
+    --glass-highlight: rgba(255,255,255,0.18);
     --text:      rgba(255,255,255,0.92);
     --text-secondary: rgba(255,255,255,0.45);
     --radius:    18px;
@@ -26,13 +27,13 @@
 
   /* ── Light mode ── */
   html:not(.dark) {
-    --bg:        #e8f4fd;
-    --pattern:   rgba(53,180,249,0.20);
-    --glass:     rgba(255,255,255,0.68);
-    --glass-border: rgba(53,180,249,0.22);
+    --bg:        #cbd5e1;
+    --pattern:   rgba(2,7,19,0.09);
+    --glass:     rgba(248,250,252,0.72);
+    --glass-border: rgba(2,7,19,0.13);
     --glass-highlight: rgba(255,255,255,0.85);
-    --text:      rgba(10,21,32,0.90);
-    --text-secondary: rgba(10,21,32,0.48);
+    --text:      rgba(2,7,19,0.90);
+    --text-secondary: rgba(2,7,19,0.48);
     --c1: #0d7acc; --c2: #1a8a3a; --c3: #c0392b;
     --c4: #7d3cad; --c5: #d35400; --c6: #0984a8;
     --c7: #c0392b; --c8: rgba(0,0,0,0.5);
@@ -45,10 +46,12 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+    font-family: 'IBM Plex Sans', -apple-system, 'Helvetica Neue', sans-serif;
     background-color: var(--bg);
-    background-image: radial-gradient(circle at 2px 2px, var(--pattern) 1px, transparent 0);
-    background-size: 32px 32px;
+    background-image:
+      linear-gradient(var(--pattern) 1px, transparent 1px),
+      linear-gradient(90deg, var(--pattern) 1px, transparent 1px);
+    background-size: 36px 36px;
     background-attachment: fixed;
     padding: 32px 24px 48px;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -76,8 +79,8 @@
   /* HUD */
   .hud { padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .stat { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; }
-  .stat-label { font-size: 9px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-secondary); }
-  .stat-value { font-size: 28px; font-weight: 300; font-variant-numeric: tabular-nums; color: var(--text); letter-spacing: -0.02em; line-height: 1; }
+  .stat-label { font-size: 9px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-secondary); font-family: 'Chakra Petch', sans-serif; }
+  .stat-value { font-size: 28px; font-weight: 400; font-variant-numeric: tabular-nums; color: var(--text); letter-spacing: -0.02em; line-height: 1; font-family: 'JetBrains Mono', monospace; transition: transform 0.15s ease; }
 
   .btn-primary {
     flex: 1; max-width: 200px; padding: 9px 20px;
@@ -189,11 +192,16 @@
     display: none; align-items: center; justify-content: center;
     flex-direction: column; gap: 10px; z-index: 20;
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    background: rgba(0,0,0,0.50);
+    background: rgba(2,7,19,0.55);
   }
-  html:not(.dark) .overlay { background: rgba(255,255,255,0.60); }
-  .overlay.visible { display: flex; }
-  .overlay-title { font-size: 34px; font-weight: 300; color: var(--text); letter-spacing: -0.02em; }
+  html:not(.dark) .overlay { background: rgba(203,213,225,0.60); }
+  .overlay.visible { display: flex; animation: overlayIn 0.45s cubic-bezier(0.16,1,0.3,1); }
+  .overlay.visible > * { animation: overlayRise 0.5s cubic-bezier(0.34,1.56,0.64,1) backwards; }
+  .overlay.visible > :nth-child(2) { animation-delay: 0.08s; }
+  .overlay.visible > :nth-child(3) { animation-delay: 0.16s; }
+  @keyframes overlayIn   { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes overlayRise { from { opacity: 0; transform: translateY(16px) scale(0.92); } to { opacity: 1; transform: none; } }
+  .overlay-title { font-size: 34px; font-weight: 500; color: var(--text); letter-spacing: -0.02em; font-family: 'Chakra Petch', sans-serif; }
   .overlay-sub   { font-size: 13px; color: var(--text-secondary); font-weight: 400; }
   .btn-overlay {
     margin-top: 8px; padding: 8px 32px;
@@ -220,13 +228,24 @@
   @keyframes pop { 0%{transform:scale(0.7);opacity:0} 60%{transform:scale(1.08)} 100%{transform:scale(1);opacity:1} }
   .cell-pop { animation: pop 0.18s cubic-bezier(0.4,0,0.2,1) forwards; }
 
+  /* Diagonal wave entrance when a new board is built */
+  @keyframes cellIn { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+  .cell-in { opacity: 0; animation: cellIn 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+
+  /* Page entrance — panels drop in one after another */
+  @keyframes panelIn { from { opacity: 0; transform: translateY(18px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+  .game-wrapper > * { animation: panelIn 0.6s cubic-bezier(0.16,1,0.3,1) backwards; }
+  .game-wrapper > :nth-child(2) { animation-delay: 0.10s; }
+  .game-wrapper > :nth-child(3) { animation-delay: 0.20s; }
+  .game-wrapper > :nth-child(4) { animation-delay: 0.30s; }
+
   ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: #35b4f9; border-radius: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(53,180,249,0.55); border-radius: 8px; }
 
   @media (prefers-reduced-motion: reduce) {
     .cell-hidden:hover { transform: none; }
-    .cell-pop, .cell-mine-exploded { animation: none; }
+    .cell-pop, .cell-mine-exploded, .cell-in, .game-wrapper > *, .overlay.visible, .overlay.visible > * { animation: none; opacity: 1; }
     .status-dot, .btn-primary:hover { transform: none; animation: none; }
   }
 </style>
@@ -369,7 +388,9 @@
     gridEl.innerHTML='';
     for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) {
       const el = document.createElement('div');
-      el.className='cell cell-hidden';
+      el.className='cell cell-hidden cell-in';
+      el.style.animationDelay = Math.min((r+c)*16, 550) + 'ms';
+      el.addEventListener('animationend', () => { el.classList.remove('cell-in'); el.style.animationDelay=''; }, { once:true });
       el.dataset.r=r; el.dataset.c=c;
       el.addEventListener('click', onClick);
       el.addEventListener('contextmenu', onRight);
@@ -381,7 +402,7 @@
 
   function paint(r,c) {
     const el=getEl(r,c); if(!el) return;
-    el.className='cell'; el.innerHTML='';
+    el.className='cell'; el.innerHTML=''; el.style.animationDelay='';
     if(flagged[r][c] && !revealed[r][c]) { el.classList.add('cell-flagged'); el.innerHTML='<span class="flag-icon" aria-label="Flagged">🚩</span>'; return; }
     if(!revealed[r][c]) { el.classList.add('cell-hidden'); return; }
     el.classList.add('cell-revealed','cell-pop');

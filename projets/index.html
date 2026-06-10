@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Projects | Engineering Portfolio</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
@@ -14,74 +14,150 @@
         extend: {
           colors: {
             primary: '#35b4f9',
-            'background-light': '#f3f6f6',
-            'background-dark': '#0d1b2e',
+            'background-light': '#cbd5e1',
+            'background-dark': '#020713',
           },
-          fontFamily: { display: ['Inter', 'sans-serif'] },
+          fontFamily: { display: ['IBM Plex Sans', 'sans-serif'], tech: ['Chakra Petch', 'sans-serif'] },
         }
       }
     }
   </script>
   <style>
-    body { font-family: 'Inter', sans-serif; transition: background-color 0.25s ease, color 0.2s ease; }
+    body { font-family: 'IBM Plex Sans', sans-serif; transition: background-color 0.3s ease, color 0.2s ease; }
+    h1, h2, h3, .font-tech { font-family: 'Chakra Petch', sans-serif; }
 
+    /* Blueprint grid */
     .circuit-pattern {
-      background-image: radial-gradient(circle at 2px 2px, rgba(53,180,249,0.08) 1px, transparent 0);
-      background-size: 24px 24px;
+      background-image:
+        linear-gradient(rgba(2,7,19,0.10) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(2,7,19,0.10) 1px, transparent 1px);
+      background-size: 44px 44px;
     }
+    .dark .circuit-pattern {
+      background-image:
+        linear-gradient(rgba(148,163,184,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148,163,184,0.06) 1px, transparent 1px);
+    }
+
+    /* Atmosphere */
+    #scroll-progress {
+      position: fixed; top: 0; left: 0; height: 3px; width: 100%; z-index: 100;
+      transform-origin: left; transform: scaleX(0);
+      background: linear-gradient(90deg, #35b4f9, #7dd3fc, #35b4f9);
+      box-shadow: 0 0 12px rgba(53,180,249,0.55);
+      pointer-events: none;
+    }
+    .grain {
+      position: fixed; inset: 0; z-index: 90; pointer-events: none;
+      opacity: 0.05; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+    }
+    .aurora {
+      position: absolute; inset: -40%; pointer-events: none;
+      background: conic-gradient(from 0deg at 60% 40%,
+        transparent 0deg, rgba(53,180,249,0.07) 80deg, transparent 160deg,
+        rgba(125,211,252,0.05) 240deg, transparent 320deg);
+      filter: blur(60px);
+      animation: auroraSpin 38s linear infinite;
+    }
+    html:not(.dark) .aurora { opacity: 0.55; }
+    @keyframes auroraSpin { to { transform: rotate(360deg); } }
 
     .dark .glass-nav {
-      background: rgba(13,27,46,0.88);
-      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(53,180,249,0.14);
+      background: rgba(2,7,19,0.82);
+      backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border-bottom: 1px solid rgba(148,163,184,0.10);
     }
     html:not(.dark) .glass-nav {
-      background: rgba(243,246,246,0.90);
-      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(53,180,249,0.18);
+      background: rgba(203,213,225,0.85);
+      backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border-bottom: 1px solid rgba(2,7,19,0.10);
     }
-    .dark #mobile-menu { background: rgba(13,27,46,0.97); border-top: 1px solid rgba(53,180,249,0.12); }
-    html:not(.dark) #mobile-menu { background: rgba(243,246,246,0.98); border-top: 1px solid rgba(53,180,249,0.16); }
+    .dark #mobile-menu { background: rgba(2,7,19,0.97); border-top: 1px solid rgba(148,163,184,0.10); }
+    html:not(.dark) #mobile-menu { background: rgba(203,213,225,0.98); border-top: 1px solid rgba(2,7,19,0.10); }
 
     html:not(.dark) #menu-icon { color: #1e293b; }
     .dark #menu-icon            { color: #f1f5f9; }
     html:not(.dark) .nav-link   { color: #1e293b; }
     .dark .nav-link             { color: #e2e8f0; }
     .nav-link:hover             { color: #35b4f9; }
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: ''; position: absolute; left: 0; bottom: -5px; height: 2px; width: 100%;
+      background: linear-gradient(90deg, #35b4f9, #7dd3fc); border-radius: 2px;
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+    }
+    .nav-link:hover::after { transform: scaleX(1); }
     html:not(.dark) .mobile-link { color: #1e293b; }
     .dark .mobile-link           { color: #e2e8f0; }
     .mobile-link:hover           { color: #35b4f9; }
 
     html:not(.dark) #theme-toggle-btn,
-    html:not(.dark) #mobile-theme-btn { background: rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.10); }
+    html:not(.dark) #mobile-theme-btn { background: rgba(2,7,19,0.06); border: 1px solid rgba(2,7,19,0.10); }
     .dark #theme-toggle-btn,
     .dark #mobile-theme-btn { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.10); }
+    #theme-icon, #mobile-theme-icon { transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1); display: inline-block; }
+    #theme-toggle-btn:active #theme-icon, #mobile-theme-btn:active #mobile-theme-icon { transform: rotate(180deg); }
 
     #mobile-menu { transition: max-height 0.3s ease, opacity 0.25s ease; max-height: 0; opacity: 0; overflow: hidden; }
     #mobile-menu.open { max-height: 440px; opacity: 1; }
 
-    /* Glassmorphism */
+    /* Glass cards with cursor spotlight */
     .glass-card {
+      position: relative;
       backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.25s ease;
+      transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.16,1,0.3,1);
     }
-    .dark .glass-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(53,180,249,0.09); }
-    html:not(.dark) .glass-card { background: rgba(255,255,255,0.76); border: 1px solid rgba(53,180,249,0.12); box-shadow: 0 2px 12px rgba(53,180,249,0.05); }
-    .glass-card:hover { border-color: rgba(53,180,249,0.32) !important; box-shadow: 0 12px 36px rgba(53,180,249,0.12); transform: translateY(-4px); }
+    .glass-card::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; z-index: 1;
+      background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%),
+        rgba(53,180,249,0.13), transparent 65%);
+      opacity: 0; transition: opacity 0.35s ease; pointer-events: none;
+    }
+    .glass-card:hover::before { opacity: 1; }
+    .dark .glass-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(148,163,184,0.10); }
+    html:not(.dark) .glass-card { background: rgba(248,250,252,0.82); border: 1px solid rgba(2,7,19,0.08); box-shadow: 0 2px 12px rgba(2,7,19,0.06); }
+    .glass-card:hover { border-color: rgba(53,180,249,0.35) !important; box-shadow: 0 14px 44px rgba(53,180,249,0.13); transform: translateY(-5px); }
+
+    /* Shimmering accent text */
+    .gradient-ink {
+      background: linear-gradient(110deg, #35b4f9 20%, #7dd3fc 40%, #0ea5e9 60%, #35b4f9 80%);
+      background-size: 200% auto;
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+      animation: shimmer 5s linear infinite;
+    }
+    @keyframes shimmer { to { background-position: 200% center; } }
+
+    /* Sheen sweep buttons */
+    .btn-sheen { position: relative; overflow: hidden; }
+    .btn-sheen::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.45) 50%, transparent 65%);
+      transform: translateX(-130%); transition: transform 0.7s ease; pointer-events: none;
+    }
+    .btn-sheen:hover::after { transform: translateX(130%); }
 
     .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 2rem; }
     @media (max-width: 768px) { .projects-grid { grid-template-columns: 1fr; } }
 
     ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0d1b2e; }
-    ::-webkit-scrollbar-thumb { background: #35b4f9; border-radius: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(53,180,249,0.55); border-radius: 8px; }
 
     /* Animations */
-    @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes floatY { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-14px);} }
+    @keyframes fadeInUp { from { opacity:0; transform:translateY(24px); filter:blur(8px); } to { opacity:1; transform:translateY(0); filter:blur(0); } }
+    @keyframes floatY { 0%,100%{transform:translateY(0) scale(1);} 50%{transform:translateY(-16px) scale(1.05);} }
 
-    .reveal { opacity:0; transform:translateY(22px); transition:opacity 0.6s ease, transform 0.6s ease; }
-    .reveal.is-visible { opacity:1; transform:translateY(0); }
+    .reveal {
+      opacity: 0; transform: translateY(28px) scale(0.985); filter: blur(10px);
+      transition: opacity 0.85s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.85s cubic-bezier(0.16,1,0.3,1),
+                  filter 0.85s cubic-bezier(0.16,1,0.3,1);
+      will-change: opacity, transform, filter;
+    }
+    .reveal.is-visible { opacity:1; transform:none; filter:none; }
     .reveal-delay-1 { transition-delay:0.12s; }
     .reveal-delay-2 { transition-delay:0.24s; }
     .reveal-delay-3 { transition-delay:0.36s; }
@@ -90,12 +166,16 @@
     .blob-float-slow { animation: floatY 11s ease-in-out infinite reverse; }
 
     @media (prefers-reduced-motion: reduce) {
-      .reveal, .blob-float, .blob-float-slow { animation:none !important; transition:none !important; opacity:1; transform:none; }
+      .reveal, .blob-float, .blob-float-slow, .aurora, .gradient-ink { animation:none !important; transition:none !important; opacity:1; transform:none; filter:none; }
       .glass-card:hover { transform:none; }
+      .btn-sheen::after { display:none; }
     }
   </style>
 </head>
-<body class="bg-[#f3f6f6] dark:bg-[#0d1b2e] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+<body class="bg-[#cbd5e1] dark:bg-[#020713] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+
+  <div id="scroll-progress" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
 
   <nav class="fixed top-0 w-full z-50 glass-nav transition-colors">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -112,7 +192,7 @@
         <button id="theme-toggle-btn" class="p-2 rounded-full hover:bg-[#35b4f9]/20 transition-all" aria-label="Toggle theme">
           <span id="theme-icon" class="material-symbols-outlined text-[#35b4f9] text-xl" aria-hidden="true">dark_mode</span>
         </button>
-        <a class="px-5 py-2.5 bg-[#35b4f9] text-[#0a1520] font-bold rounded-lg hover:brightness-110 transition-all text-sm"
+        <a class="btn-sheen px-5 py-2.5 bg-[#35b4f9] text-[#0a1520] font-bold rounded-lg hover:brightness-110 transition-all text-sm"
            href="https://github.com/TONI7008" target="_blank" rel="noopener noreferrer">GitHub</a>
       </div>
       <div class="flex items-center gap-3 md:hidden">
@@ -139,6 +219,7 @@
 
     <!-- Hero -->
     <section class="relative py-16 circuit-pattern overflow-hidden">
+      <div class="aurora" aria-hidden="true"></div>
       <div class="absolute right-[-8%] top-[-20%] w-[400px] h-[400px] bg-[#35b4f9]/8 rounded-full blur-[100px] pointer-events-none blob-float" aria-hidden="true"></div>
       <div class="absolute left-[-5%] bottom-[-10%] w-[260px] h-[260px] bg-[#35b4f9]/5 rounded-full blur-[80px] pointer-events-none blob-float-slow" aria-hidden="true"></div>
       <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#35b4f9]/4 to-transparent pointer-events-none" aria-hidden="true"></div>
@@ -148,7 +229,7 @@
           Project Vault
         </div>
         <h1 class="text-4xl md:text-6xl font-black tracking-tight text-slate-900 dark:text-white mb-5 animate-[fadeInUp_0.5s_ease_0.2s_forwards] opacity-0">
-          Engineering <span class="text-[#35b4f9]">Innovation</span>
+          Engineering <span class="gradient-ink">Innovation</span>
         </h1>
         <p class="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto animate-[fadeInUp_0.5s_ease_0.3s_forwards] opacity-0">
           Explore my flagship projects — from intelligent IoT systems to classic games rebuilt with modern algorithms.
@@ -259,7 +340,7 @@
             <img alt="Newton Root Solver Visualization" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                  loading="lazy" width="600" height="338"
                  src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&h=400&fit=crop"
-                 onerror="this.src='https://placehold.co/600x400/0d1b2e/35b4f9?text=Newton+Solver'">
+                 onerror="this.src='https://placehold.co/600x400/020713/35b4f9?text=Newton+Solver'">
             <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" aria-hidden="true"></div>
           </div>
           <div class="p-7">
@@ -279,8 +360,30 @@
           </div>
         </div>
 
-        <!-- 5. Debug Monitor -->
+        <!-- 5. Local AI Chat -->
         <div class="group relative glass-card rounded-2xl overflow-hidden reveal">
+          <div class="aspect-video relative overflow-hidden bg-gradient-to-br from-sky-950/60 to-slate-800 flex items-center justify-center">
+            <span class="material-symbols-outlined text-6xl text-[#35b4f9]/40" aria-hidden="true">smart_toy</span>
+          </div>
+          <div class="p-7">
+            <div class="flex gap-2 mb-4 flex-wrap" translate="no">
+              <span class="px-2 py-1 bg-[#35b4f9]/10 text-[#35b4f9] text-[10px] font-black uppercase rounded-full">AI</span>
+              <span class="px-2 py-1 bg-[#35b4f9]/10 text-[#35b4f9] text-[10px] font-black uppercase rounded-full">JavaScript</span>
+              <span class="px-2 py-1 bg-[#35b4f9]/10 text-[#35b4f9] text-[10px] font-black uppercase rounded-full">LLM</span>
+            </div>
+            <h3 class="text-xl font-black text-slate-900 dark:text-white mb-2">Local AI Chat</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-5">Browser chat client for any OpenAI-compatible server (LM Studio, Ollama, llama.cpp). Streaming responses, markdown rendering, image attachments for vision models — all running locally.</p>
+            <div class="flex items-center justify-between">
+              <a href="local_ai/index.html" class="flex items-center gap-1 text-[#35b4f9] font-bold text-sm hover:gap-2 transition-all">
+                Open Chat <span class="material-symbols-outlined text-sm" aria-hidden="true">forum</span>
+              </a>
+              <span class="text-[10px] uppercase tracking-wider text-slate-400">live demo</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Debug Monitor -->
+        <div class="group relative glass-card rounded-2xl overflow-hidden reveal reveal-delay-1">
           <div class="aspect-video relative overflow-hidden bg-gradient-to-br from-cyan-950/50 to-slate-700 flex items-center justify-center">
             <span class="material-symbols-outlined text-6xl text-[#35b4f9]/40" aria-hidden="true">deployed_code</span>
           </div>
@@ -299,8 +402,8 @@
           </div>
         </div>
 
-        <!-- 6. FPGA FIR Filter -->
-        <div class="group relative glass-card rounded-2xl overflow-hidden reveal reveal-delay-1">
+        <!-- 7. FPGA FIR Filter -->
+        <div class="group relative glass-card rounded-2xl overflow-hidden reveal reveal-delay-2">
           <div class="aspect-video relative overflow-hidden bg-gradient-to-br from-purple-900/30 to-slate-800 flex items-center justify-center">
             <span class="material-symbols-outlined text-6xl text-[#35b4f9]/40" aria-hidden="true">developer_board</span>
           </div>
@@ -329,7 +432,7 @@
         <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-3">Collaborate on impactful projects</h2>
         <p class="text-slate-600 dark:text-slate-300 max-w-xl mx-auto mb-6">Have a concept in mind? I'm open to research partnerships and engineering challenges.</p>
         <a href="mailto:tgnmhtt@gmail.com"
-           class="inline-flex items-center gap-2 px-8 py-3 bg-[#35b4f9] text-[#0a1520] font-black rounded-xl hover:brightness-110 transition-all shadow-lg shadow-[#35b4f9]/20">
+           class="btn-sheen inline-flex items-center gap-2 px-8 py-3 bg-[#35b4f9] text-[#0a1520] font-black rounded-xl hover:brightness-110 transition-all shadow-lg shadow-[#35b4f9]/20">
           <span class="material-symbols-outlined" aria-hidden="true">mail</span>
           Start a conversation
         </a>
@@ -404,6 +507,30 @@
       document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
     } else {
       document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+    }
+
+    // Scroll progress bar
+    const progressBar = document.getElementById('scroll-progress');
+    let progressTick = false;
+    function updateProgress() {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.transform = `scaleX(${max > 0 ? window.scrollY / max : 0})`;
+      progressTick = false;
+    }
+    window.addEventListener('scroll', () => {
+      if (!progressTick) { progressTick = true; requestAnimationFrame(updateProgress); }
+    }, { passive: true });
+    updateProgress();
+
+    // Cursor spotlight on glass cards
+    if (!reducedMotion && window.matchMedia('(pointer: fine)').matches) {
+      document.querySelectorAll('.glass-card').forEach(card => {
+        card.addEventListener('pointermove', e => {
+          const r = card.getBoundingClientRect();
+          card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+          card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+        });
+      });
     }
   </script>
 </body>

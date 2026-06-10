@@ -5,7 +5,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Engineer Portfolio | Building the Future</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
   tailwind.config = {
@@ -14,10 +14,10 @@
       extend: {
         colors: {
           "primary": "#35b4f9",
-          "background-light": "#f3f6f6",
-          "background-dark": "#0d1b2e",
+          "background-light": "#cbd5e1",
+          "background-dark": "#020713",
         },
-        fontFamily: { "display": ["Inter", "sans-serif"] },
+        fontFamily: { "display": ["IBM Plex Sans", "sans-serif"], "tech": ["Chakra Petch", "sans-serif"] },
         borderRadius: {
           "DEFAULT": "0.25rem",
           "lg": "0.5rem",
@@ -29,91 +29,166 @@
   }
 </script>
 <style>
-  body { font-family: 'Inter', sans-serif; }
+  body { font-family: 'IBM Plex Sans', sans-serif; }
+  h1, h2, h3, .font-tech { font-family: 'Chakra Petch', sans-serif; }
+  code { font-family: 'JetBrains Mono', monospace; }
 
+  /* ── Blueprint grid ── */
   .circuit-pattern {
-    background-image: radial-gradient(circle at 2px 2px, rgba(53,180,249,0.06) 1px, transparent 0);
-    background-size: 24px 24px;
+    background-image:
+      linear-gradient(rgba(2,7,19,0.10) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(2,7,19,0.10) 1px, transparent 1px);
+    background-size: 44px 44px;
   }
+  .dark .circuit-pattern {
+    background-image:
+      linear-gradient(rgba(148,163,184,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148,163,184,0.06) 1px, transparent 1px);
+  }
+
+  /* ── Atmosphere: scroll progress, grain, aurora ── */
+  #scroll-progress {
+    position: fixed; top: 0; left: 0; height: 3px; width: 100%; z-index: 100;
+    transform-origin: left; transform: scaleX(0);
+    background: linear-gradient(90deg, #35b4f9, #7dd3fc, #35b4f9);
+    box-shadow: 0 0 12px rgba(53,180,249,0.55);
+    pointer-events: none;
+  }
+  .grain {
+    position: fixed; inset: 0; z-index: 90; pointer-events: none;
+    opacity: 0.05; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+  }
+  .aurora {
+    position: absolute; inset: -40%; pointer-events: none;
+    background: conic-gradient(from 0deg at 60% 40%,
+      transparent 0deg, rgba(53,180,249,0.07) 80deg, transparent 160deg,
+      rgba(125,211,252,0.05) 240deg, transparent 320deg);
+    filter: blur(60px);
+    animation: auroraSpin 38s linear infinite;
+  }
+  html:not(.dark) .aurora { opacity: 0.55; }
+  @keyframes auroraSpin { to { transform: rotate(360deg); } }
 
   /* ── NAV ── */
   .dark .glass-nav {
-    background: rgba(13,27,46,0.88);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(53,180,249,0.12);
+    background: rgba(2,7,19,0.82);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border-bottom: 1px solid rgba(148,163,184,0.10);
   }
   html:not(.dark) .glass-nav {
-    background: rgba(243,246,246,0.90);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(53,180,249,0.18);
+    background: rgba(203,213,225,0.85);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border-bottom: 1px solid rgba(2,7,19,0.10);
   }
   .dark #mobile-menu {
-    background: rgba(13,27,46,0.97);
-    border-top: 1px solid rgba(53,180,249,0.12);
+    background: rgba(2,7,19,0.97);
+    border-top: 1px solid rgba(148,163,184,0.10);
   }
   html:not(.dark) #mobile-menu {
-    background: rgba(243,246,246,0.98);
-    border-top: 1px solid rgba(53,180,249,0.16);
+    background: rgba(203,213,225,0.98);
+    border-top: 1px solid rgba(2,7,19,0.10);
   }
   html:not(.dark) #menu-icon { color: #1e293b; }
   .dark #menu-icon            { color: #f1f5f9; }
   html:not(.dark) .nav-link   { color: #1e293b; }
   .dark .nav-link             { color: #e2e8f0; }
   .nav-link:hover             { color: #35b4f9; }
+  .nav-link { position: relative; }
+  .nav-link::after {
+    content: ''; position: absolute; left: 0; bottom: -5px; height: 2px; width: 100%;
+    background: linear-gradient(90deg, #35b4f9, #7dd3fc); border-radius: 2px;
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+  }
+  .nav-link:hover::after { transform: scaleX(1); }
   html:not(.dark) .mobile-link { color: #1e293b; }
   .dark .mobile-link           { color: #e2e8f0; }
   .mobile-link:hover           { color: #35b4f9; }
   html:not(.dark) #theme-toggle-btn,
   html:not(.dark) #mobile-theme-btn {
-    background: rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.10);
+    background: rgba(2,7,19,0.06); border: 1px solid rgba(2,7,19,0.10);
   }
   .dark #theme-toggle-btn,
   .dark #mobile-theme-btn {
     background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.10);
   }
+  #theme-toggle-btn:active #theme-icon, #mobile-theme-btn:active #mobile-theme-icon { transform: rotate(180deg); }
+  #theme-icon, #mobile-theme-icon { transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1); display: inline-block; }
   #mobile-menu {
     transition: max-height 0.3s ease, opacity 0.3s ease;
     max-height: 0; opacity: 0; overflow: hidden;
   }
   #mobile-menu.open { max-height: 440px; opacity: 1; }
 
-  /* ── Glassmorphism ── */
+  /* ── Glass cards with cursor spotlight ── */
   .glass-card {
+    position: relative;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.16,1,0.3,1);
   }
+  .glass-card::before {
+    content: ''; position: absolute; inset: 0; border-radius: inherit; z-index: 1;
+    background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(53,180,249,0.13), transparent 65%);
+    opacity: 0; transition: opacity 0.35s ease; pointer-events: none;
+  }
+  .glass-card:hover::before { opacity: 1; }
   .dark .glass-card {
     background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(53,180,249,0.09);
+    border: 1px solid rgba(148,163,184,0.10);
   }
   html:not(.dark) .glass-card {
-    background: rgba(255,255,255,0.75);
-    border: 1px solid rgba(53,180,249,0.13);
-    box-shadow: 0 2px 16px rgba(53,180,249,0.05);
+    background: rgba(248,250,252,0.82);
+    border: 1px solid rgba(2,7,19,0.08);
+    box-shadow: 0 2px 16px rgba(2,7,19,0.06);
   }
   .glass-card:hover {
-    border-color: rgba(53,180,249,0.30) !important;
-    box-shadow: 0 8px 32px rgba(53,180,249,0.10);
+    border-color: rgba(53,180,249,0.35) !important;
+    box-shadow: 0 14px 44px rgba(53,180,249,0.13);
+    transform: translateY(-4px);
   }
+
+  /* ── Shimmering accent text ── */
+  .gradient-ink {
+    background: linear-gradient(110deg, #35b4f9 20%, #7dd3fc 40%, #0ea5e9 60%, #35b4f9 80%);
+    background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    animation: shimmer 5s linear infinite;
+  }
+  @keyframes shimmer { to { background-position: 200% center; } }
+
+  /* ── Sheen sweep buttons ── */
+  .btn-sheen { position: relative; overflow: hidden; }
+  .btn-sheen::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.45) 50%, transparent 65%);
+    transform: translateX(-130%); transition: transform 0.7s ease; pointer-events: none;
+  }
+  .btn-sheen:hover::after { transform: translateX(130%); }
 
   /* ── Animations ── */
   @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(24px); filter: blur(8px); }
+    to   { opacity: 1; transform: translateY(0); filter: blur(0); }
   }
   @keyframes floatY {
-    0%,100% { transform: translateY(0); }
-    50%     { transform: translateY(-12px); }
+    0%,100% { transform: translateY(0) scale(1); }
+    50%     { transform: translateY(-16px) scale(1.05); }
   }
 
   .reveal {
-    opacity: 0; transform: translateY(22px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    opacity: 0; transform: translateY(28px) scale(0.985); filter: blur(10px);
+    transition: opacity 0.85s cubic-bezier(0.16,1,0.3,1),
+                transform 0.85s cubic-bezier(0.16,1,0.3,1),
+                filter 0.85s cubic-bezier(0.16,1,0.3,1);
+    will-change: opacity, transform, filter;
   }
-  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+  .reveal.is-visible { opacity: 1; transform: none; filter: none; }
   .reveal-delay-1 { transition-delay: 0.12s; }
   .reveal-delay-2 { transition-delay: 0.24s; }
   .reveal-delay-3 { transition-delay: 0.36s; }
@@ -121,19 +196,40 @@
   .blob-float      { animation: floatY 7s ease-in-out infinite; }
   .blob-float-slow { animation: floatY 10s ease-in-out infinite reverse; }
 
-  .skill-tag { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+  .skill-tag { transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease, border-color 0.25s ease; }
   .skill-tag:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(53,180,249,0.15);
+    transform: translateY(-3px) rotate(-0.5deg);
+    box-shadow: 0 6px 18px rgba(53,180,249,0.18);
   }
+  .skill-tag .material-symbols-outlined { transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1); }
+  .skill-tag:hover .material-symbols-outlined { transform: scale(1.2) rotate(6deg); }
+
+  /* ── HUD corner brackets (hero code card) ── */
+  .hud-frame { position: relative; }
+  .hud-frame::before, .hud-frame::after {
+    content: ''; position: absolute; width: 22px; height: 22px;
+    border: 2px solid rgba(53,180,249,0.65); transition: all 0.4s ease; pointer-events: none;
+  }
+  .hud-frame::before { top: -7px; left: -7px; border-right: none; border-bottom: none; border-radius: 6px 0 0 0; }
+  .hud-frame::after  { bottom: -7px; right: -7px; border-left: none; border-top: none; border-radius: 0 0 6px 0; }
+  .hud-frame:hover::before { top: -11px; left: -11px; }
+  .hud-frame:hover::after  { bottom: -11px; right: -11px; }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(53,180,249,0.55); border-radius: 8px; }
 
   @media (prefers-reduced-motion: reduce) {
-    .reveal, .blob-float, .blob-float-slow { animation: none !important; transition: none !important; opacity: 1; transform: none; }
-    .skill-tag:hover { transform: none; }
+    .reveal, .blob-float, .blob-float-slow, .aurora, .gradient-ink { animation: none !important; transition: none !important; opacity: 1; transform: none; filter: none; }
+    .skill-tag:hover, .glass-card:hover { transform: none; }
+    .btn-sheen::after { display: none; }
   }
 </style>
 </head>
-<body class="bg-[#f3f6f6] dark:bg-[#0d1b2e] text-slate-900 dark:text-slate-100 font-display transition-colors duration-300">
+<body class="bg-[#cbd5e1] dark:bg-[#020713] text-slate-900 dark:text-slate-100 font-display transition-colors duration-300">
+
+<div id="scroll-progress" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
 
 <!-- Sticky Navigation -->
 <nav class="fixed top-0 w-full z-50 glass-nav transition-colors">
@@ -176,8 +272,9 @@
 
 <!-- Hero -->
 <section class="relative min-h-[85vh] flex items-center overflow-hidden circuit-pattern">
-  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#0d1b2e]/50 to-[#0d1b2e] pointer-events-none dark:block hidden" aria-hidden="true"></div>
-  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#f3f6f6]/20 to-transparent pointer-events-none dark:hidden block" aria-hidden="true"></div>
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#020713]/50 to-[#020713] pointer-events-none dark:block hidden" aria-hidden="true"></div>
+  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#cbd5e1]/20 to-transparent pointer-events-none dark:hidden block" aria-hidden="true"></div>
   <div class="absolute right-[-10%] top-[10%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none blob-float" aria-hidden="true"></div>
   <div class="absolute left-[-5%] bottom-[10%] w-[300px] h-[300px] bg-primary/5 rounded-full blur-[80px] pointer-events-none blob-float-slow" aria-hidden="true"></div>
 
@@ -191,13 +288,13 @@
         Available for New Projects
       </div>
       <h1 class="text-4xl sm:text-5xl lg:text-7xl font-black leading-[1.1] tracking-tight text-slate-900 dark:text-white animate-[fadeInUp_0.6s_ease_0.2s_forwards] opacity-0">
-        Building the Future through <span class="text-primary">Code</span> &amp; <span class="text-primary">Design</span>
+        Building the Future through <span class="gradient-ink">Code</span> &amp; <span class="gradient-ink">Design</span>
       </h1>
       <p class="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed animate-[fadeInUp_0.6s_ease_0.3s_forwards] opacity-0">
         Computer Engineering student specializing in Machine Learning, RF systems, and embedded system design, with hands-on experience in communication protocols (UART, SPI, I²C) and efficient hardware–software integration.
       </p>
       <div class="flex flex-wrap gap-4 animate-[fadeInUp_0.6s_ease_0.4s_forwards] opacity-0">
-        <a href="#projects" class="flex items-center gap-2 min-w-[160px] justify-center px-8 py-4 bg-primary text-[#0a1520] font-black rounded-lg hover:brightness-110 transition-all shadow-lg shadow-primary/20">
+        <a href="#projects" class="btn-sheen flex items-center gap-2 min-w-[160px] justify-center px-8 py-4 bg-primary text-[#0a1520] font-black rounded-lg hover:brightness-110 transition-all shadow-lg shadow-primary/20">
           <span>View My Work</span>
           <span class="material-symbols-outlined text-sm" aria-hidden="true">arrow_forward</span>
         </a>
@@ -212,9 +309,9 @@
       <div class="relative z-10 rounded-xl overflow-hidden border border-white/10 shadow-2xl">
         <img alt="Code editor background" class="w-full h-auto" width="640" height="360"
              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwl01Vj4xcx1QaaRgHnxLq2Zqb94XCk-80FmqrwEIJINl68Ra16Edo6mvKrnAGbzHGp0u_4G95e_0ZgFgJqgAwJXqGu6jnGZ81fMBnrYkcb7NJ9vT74iaMAkxmbYYIubOUWAzfDr_yf_Na_TrKS5aZP_4749LllBn0bZaS82Bx6WnnK6tOmJMqrNAfh1v39YmVNjiJf-Iw0nozChTYoCuQIBL2mSh_GfyW5qO4wEM5K7SmNfGoDhV2sfckUVdcFxxmonWwgIDfvWg"/>
-        <div class="absolute inset-0 bg-gradient-to-t from-[#0d1b2e] via-transparent to-transparent" aria-hidden="true"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#020713] via-transparent to-transparent" aria-hidden="true"></div>
       </div>
-      <div class="relative lg:absolute mt-4 lg:mt-0 lg:-bottom-6 lg:-left-6 mx-auto lg:mx-0 max-w-[340px] w-full bg-[#0a1626]/90 backdrop-blur-xl border border-primary/20 rounded-2xl shadow-2xl shadow-primary/10 p-6 z-20 transition-transform duration-500 hover:scale-[1.02]">
+      <div class="hud-frame relative lg:absolute mt-4 lg:mt-0 lg:-bottom-6 lg:-left-6 mx-auto lg:mx-0 max-w-[340px] w-full bg-[#050d1f]/90 backdrop-blur-xl border border-primary/20 rounded-2xl shadow-2xl shadow-primary/10 p-6 z-20 transition-transform duration-500 hover:scale-[1.02]">
         <div class="flex gap-1.5 mb-4" aria-hidden="true">
           <div class="size-2.5 rounded-full bg-red-500/50"></div>
           <div class="size-2.5 rounded-full bg-yellow-500/50"></div>
@@ -234,7 +331,7 @@
 </section>
 
 <!-- Skills -->
-<section class="py-16 bg-[#f3f6f6] dark:bg-[#0a1626]" id="skills">
+<section class="py-16 bg-[#bfccdb] dark:bg-[#050d1f] transition-colors duration-300" id="skills">
   <div class="max-w-7xl mx-auto px-6 text-center mb-12 reveal">
     <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-3">Technical Proficiency</h2>
     <div class="w-12 h-1 bg-primary mx-auto rounded-full"></div>
@@ -309,7 +406,7 @@
 </section>
 
 <!-- Education & Experience -->
-<section class="py-20 bg-[#f3f6f6] dark:bg-[#0d1b2e]" id="experience">
+<section class="py-20 bg-[#cbd5e1] dark:bg-[#020713] transition-colors duration-300" id="experience">
   <div class="max-w-7xl mx-auto px-6">
     <div class="text-center mb-14 reveal">
       <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-3">Education &amp; Background</h2>
@@ -368,7 +465,7 @@
 </section>
 
 <!-- Projects -->
-<section class="py-24 bg-[#f3f6f6] dark:bg-[#0d1b2e]" id="projects">
+<section class="py-24 bg-[#cbd5e1] dark:bg-[#020713] transition-colors duration-300" id="projects">
   <div class="max-w-7xl mx-auto px-6">
     <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 reveal">
       <div>
@@ -385,7 +482,7 @@
         <div class="aspect-video relative overflow-hidden">
           <img alt="Neonatal Monitoring System" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" width="640" height="360"
                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZ5v7-a_hcprPDnRHKpytA5upM_OagQdZ99XHX0HVfkpQFlxrQvZIeMuw3NlT2jA60HLE-XdQhptOX2xbOyrJdwEets8cGt0KGO9Oujw7DtyKIGZP3wu-6yIRl7KyE8Bu2R-QHKfe7UaWXLCqcu_p5UjmJWl839M55Z5HahPS6Nh49rT0XY4LgYVHEUKYIEfeV1YYd4TOHOEHSTJlhQjuCeurUs8Q6SOm6NIVLq49wWwLwoXnBksgPk77U1YlMY4ts28Lff1DIn2c"/>
-          <div class="absolute inset-0 bg-[#0d1b2e]/20 group-hover:bg-transparent transition-colors" aria-hidden="true"></div>
+          <div class="absolute inset-0 bg-[#020713]/20 group-hover:bg-transparent transition-colors" aria-hidden="true"></div>
         </div>
         <div class="p-8">
           <div class="flex gap-2 mb-4 flex-wrap" translate="no">
@@ -406,7 +503,7 @@
         <div class="aspect-video relative overflow-hidden">
           <img alt="Multiplayer Checkers Game" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" width="640" height="360"
                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8xPq-FJpNxgg8UTzMh67wYc7Cd5DPO-Mp_iB-EoynvepA5y8EMIJTAbzYwbUKw7b2qOv7QNLgQVna9D3-HwqsMV0UB2FmO5--s_QuesnuOpvwwQo8b6-E3_AOzMEThSmzfw2rwYLdyL57CxWKlqOze_cuwg8n5ddlF-3C8sC1bAMlZSSWEYg7AzHKHUVNW94TSboIh6h0_HPurPH_VRfIRqT_ccqB1ZiWQ9tm5UdLXbeA7BED-8ghBdbSEQ1-ilK5tFz-rd1EpFc"/>
-          <div class="absolute inset-0 bg-[#0d1b2e]/20 group-hover:bg-transparent transition-colors" aria-hidden="true"></div>
+          <div class="absolute inset-0 bg-[#020713]/20 group-hover:bg-transparent transition-colors" aria-hidden="true"></div>
         </div>
         <div class="p-8">
           <div class="flex gap-2 mb-4 flex-wrap" translate="no">
@@ -433,7 +530,7 @@
     <h2 class="text-4xl md:text-5xl font-black text-[#0a1520] relative z-10">Ready to build something extraordinary?</h2>
     <p class="text-[#0a1520]/80 text-lg max-w-2xl mx-auto font-medium relative z-10">I'm currently open to freelance opportunities and senior engineering positions. Let's discuss your vision.</p>
     <div class="flex justify-center relative z-10">
-      <a href="mailto:tgnmhtt@gmail.com" class="px-10 py-5 bg-[#0d1b2e] text-white font-black rounded-xl hover:scale-105 transition-transform flex items-center gap-3 shadow-lg">
+      <a href="mailto:tgnmhtt@gmail.com" class="btn-sheen px-10 py-5 bg-[#020713] text-white font-black rounded-xl hover:scale-105 transition-transform flex items-center gap-3 shadow-lg">
         <span class="material-symbols-outlined" aria-hidden="true">mail</span>
         Hire Me Now
       </a>
@@ -507,6 +604,30 @@
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   } else {
     document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+  }
+
+  // Scroll progress bar
+  const progressBar = document.getElementById('scroll-progress');
+  let progressTick = false;
+  function updateProgress() {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.transform = `scaleX(${max > 0 ? window.scrollY / max : 0})`;
+    progressTick = false;
+  }
+  window.addEventListener('scroll', () => {
+    if (!progressTick) { progressTick = true; requestAnimationFrame(updateProgress); }
+  }, { passive: true });
+  updateProgress();
+
+  // Cursor spotlight on glass cards
+  if (!reducedMotion && window.matchMedia('(pointer: fine)').matches) {
+    document.querySelectorAll('.glass-card').forEach(card => {
+      card.addEventListener('pointermove', e => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+    });
   }
 </script>
 </body>
