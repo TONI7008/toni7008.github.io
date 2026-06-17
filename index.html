@@ -467,14 +467,9 @@
 <!-- Projects -->
 <section class="py-24 bg-[#cbd5e1] dark:bg-[#020713] transition-colors duration-300" id="projects">
   <div class="max-w-7xl mx-auto px-6">
-    <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 reveal">
-      <div>
-        <h2 class="text-3xl lg:text-4xl font-black text-slate-900 dark:text-white mb-4">Featured Projects</h2>
-        <p class="text-slate-600 dark:text-slate-400 max-w-lg">A selection of complex systems I've architected and implemented from the ground up.</p>
-      </div>
-      <a class="text-primary font-bold hover:underline flex items-center gap-2 shrink-0" href="projets/index.html">
-        View All Projects <span class="material-symbols-outlined text-sm" aria-hidden="true">open_in_new</span>
-      </a>
+    <div class="mb-16 reveal">
+      <h2 class="text-3xl lg:text-4xl font-black text-slate-900 dark:text-white mb-4">Featured Projects</h2>
+      <p class="text-slate-600 dark:text-slate-400 max-w-lg">A selection of complex systems I've architected and implemented from the ground up.</p>
     </div>
     <div class="grid md:grid-cols-2 gap-8">
 
@@ -519,6 +514,14 @@
         </div>
       </div>
 
+    </div>
+
+    <div class="flex justify-center mt-14 reveal reveal-delay-1">
+      <a href="projets/index.html"
+         class="btn-sheen group flex items-center gap-2 px-8 py-4 bg-primary text-[#0a1520] font-black rounded-lg hover:brightness-110 transition-all shadow-lg shadow-primary/20">
+        <span>View All Projects</span>
+        <span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1" aria-hidden="true">arrow_forward</span>
+      </a>
     </div>
   </div>
 </section>
