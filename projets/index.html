@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Projects · Igor Tagne</title>
-<meta name="description" content="Projects by Igor Tagne: an FPGA infant monitor, checkers and Connect 4 in C++/Qt, and three tools that run in the browser.">
+<meta name="description" content="Projects by Igor Tagne: a bomb-disposal robot driven by hand gestures, an FPGA infant monitor, checkers and Connect 4 in C++/Qt, and three tools that run in the browser.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0b0d10" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Projects · Igor Tagne">
-<meta property="og:description" content="An FPGA infant monitor, board-game AIs in C++/Qt, and tools that run in the browser.">
+<meta property="og:description" content="A gesture-controlled bomb-disposal robot, an FPGA infant monitor, board-game AIs in C++/Qt, and tools that run in the browser.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <script>
   // Set the theme before first paint so the page never flashes the wrong one.
@@ -46,11 +46,11 @@
 
 <header class="site-header">
   <div class="wrap nav">
-    <a class="brand" href="../" translate="no">toni<span>.dev</span></a>
+    <a class="brand" href="../index.html" translate="no">toni<span>.dev</span></a>
     <nav aria-label="Main">
       <ul class="nav-links" role="list">
-        <li><a href="./" aria-current="page">Work</a></li>
-        <li><a href="../#about">About</a></li>
+        <li><a href="index.html" aria-current="page">Work</a></li>
+        <li><a href="../index.html#about">About</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
@@ -65,7 +65,7 @@
 
   <section class="page-hero wrap" aria-labelledby="page-title">
     <h1 id="page-title" class="hero-in">Projects</h1>
-    <p class="lede hero-in" style="--i:1">An FPGA infant monitor, two desktop games in C++/Qt, and three tools you can open on this site without installing anything.</p>
+    <p class="lede hero-in" style="--i:1">A bomb-disposal robot, an FPGA infant monitor, two desktop games in C++/Qt, and three tools you can open on this site without installing anything.</p>
     <nav class="toc hero-in" style="--i:2" aria-label="On this page">
       <a href="#hardware"><span>01</span>Hardware</a>
       <a href="#desktop"><span>02</span>Desktop apps</a>
@@ -79,6 +79,42 @@
       <span class="section-num">01</span>
       <h2 id="hardware-title">Hardware</h2>
     </div>
+
+    <article class="feature reveal" aria-labelledby="sentinel-title">
+      <figure class="media">
+        <img src="../Images/projects/sentinel-v1-640.webp"
+             srcset="../Images/projects/sentinel-v1-640.webp 640w, ../Images/projects/sentinel-v1-lg.webp 1200w"
+             sizes="(min-width: 1200px) 536px, (min-width: 900px) 45vw, 100vw"
+             width="1200" height="900" decoding="async"
+             alt="Render of Sentinel V1: a tracked chassis with the electronics, an emergency stop and a radio antenna, and a six-axis arm ending in a wire cutter">
+      </figure>
+      <div>
+        <p class="label">Robotics · Python, Rust, C++</p>
+        <h3 id="sentinel-title">Sentinel V1</h3>
+        <p class="sub">Bomb-disposal robot driven by hand gestures (GEN 1973, UQO)</p>
+        <p class="desc">A tracked robot with a six-axis arm and a wire cutter. The operator drives it with bare hands in front of a webcam. MediaPipe tracks both hands: a pinch moves the arm, a V sign works the cutter, and an open palm from the other hand stops everything. A game controller works too.</p>
+        <p class="desc">The station sends commands over UDP to a Raspberry Pi 5, which runs inverse kinematics and jerk-limited trajectories in Rust at 50 Hz. An Arduino Mega drives the servos and tracks. While the hardware is being built, the same chain runs against a PyBullet simulator, and a parity test checks the Rust code against the Python simulator.</p>
+        <ul class="tags" role="list" translate="no">
+          <li>Python</li><li>MediaPipe</li><li>Rust</li><li>C++</li><li>PyBullet</li><li>Blender</li><li>three.js</li>
+        </ul>
+        <a class="link-arrow" href="sentinel_v1/index.html">
+          Open the 3D tour
+          <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+        </a>
+      </div>
+      <div class="chain-wrap">
+        <span class="label">Command path</span>
+        <div class="chain" role="img" aria-label="The operator station sends commands over UDP to the Raspberry Pi 5, which sends setpoints over USB to the Arduino Mega, which drives the arm servos and the tracks.">
+          <div class="node"><b>Station</b><small>Python</small></div>
+          <div class="link"><span>UDP</span></div>
+          <div class="node"><b>Raspberry Pi 5</b><small>Rust</small></div>
+          <div class="link"><span>USB</span></div>
+          <div class="node"><b>Arduino Mega</b><small>C++</small></div>
+          <div class="link"></div>
+          <div class="node"><b>Servos + tracks</b></div>
+        </div>
+      </div>
+    </article>
 
     <article class="feature reveal" aria-labelledby="wtb-title">
       <figure class="media">

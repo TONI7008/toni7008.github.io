@@ -574,6 +574,8 @@ html:not(.js) .theme-toggle { display: none; }
   .cards-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 .feature + .cards { margin-top: 48px; }
+.feature + .feature { margin-top: 72px; }
+@media (min-width: 900px) { .feature + .feature { margin-top: 96px; } }
 
 .card {
   position: relative;
