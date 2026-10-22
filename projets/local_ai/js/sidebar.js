@@ -87,11 +87,11 @@ class Sidebar {
     if (!sessions.length) {
       const empty = document.createElement('div');
       empty.className = 'history-empty';
-      empty.textContent = 'No saved chats yet — send a message to start one.';
+      empty.textContent = 'No saved chats yet. Send a message to start one.';
       this.listEl.append(empty);
       return;
     }
-    sessions.forEach((info, i) => this._renderItem(info, i));
+    sessions.forEach((info) => this._renderItem(info));
   }
 
   setActive(id) {
@@ -101,7 +101,7 @@ class Sidebar {
     });
   }
 
-  _renderItem(info, index) {
+  _renderItem(info) {
     let preview = info.preview || '(empty chat)';
     if (preview.length > Sidebar.PREVIEW_MAX_LEN) {
       preview = preview.slice(0, Sidebar.PREVIEW_MAX_LEN - 1) + '…';
@@ -110,7 +110,6 @@ class Sidebar {
     const item = document.createElement('div');
     item.className = 'history-item' + (info.id === this.activeId ? ' active' : '');
     item.dataset.id = info.id;
-    item.style.animationDelay = `${Math.min(index, 10) * 28}ms`;
     item.title = info.preview || '';
 
     const when = document.createElement('span');

@@ -92,7 +92,7 @@ class ApiWrapper {
     });
     if (!res.ok) {
       const text = await res.text().catch(() => '');
-      throw new Error(`HTTP ${res.status} while loading model${text ? ` — ${text.slice(0, 200)}` : ''}`);
+      throw new Error(`HTTP ${res.status} while loading model${text ? `: ${text.slice(0, 200)}` : ''}`);
     }
   }
 
@@ -139,7 +139,7 @@ class ApiWrapper {
    *          (reasoning is *not* included — see onReasoning)
    */
   async chat(history, userText, attachments = [], { onChunk, onReasoning, signal } = {}) {
-    if (!this.modelName) throw new Error('No model selected — open Settings and fetch the model list');
+    if (!this.modelName) throw new Error('No model selected. Open Settings and fetch the model list.');
 
     const body = JSON.stringify({
       model: this.modelName,
@@ -156,7 +156,7 @@ class ApiWrapper {
 
     if (!res.ok || !res.body) {
       const text = await res.text().catch(() => '');
-      throw new Error(`HTTP ${res.status}${text ? ` — ${text.slice(0, 200)}` : ''}`);
+      throw new Error(`HTTP ${res.status}${text ? `: ${text.slice(0, 200)}` : ''}`);
     }
 
     return this._consumeSSE(res.body, onChunk, onReasoning);

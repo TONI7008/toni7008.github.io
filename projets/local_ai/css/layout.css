@@ -1,10 +1,11 @@
 /* ════════════════════════════════════════════════════════════════════════
-   Page-level layout — sidebar | main column | settings drawer
+   Page-level layout: sidebar | main column | settings drawer
    ════════════════════════════════════════════════════════════════════════ */
 
 .app {
   display: flex;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   position: relative;
 }
@@ -16,12 +17,15 @@
   flex: 0 0 var(--sidebar-width);
   display: flex;
   flex-direction: column;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
   background: var(--surface);
   border-right: 1px solid var(--border);
   overflow: hidden;
   transition: flex-basis var(--duration-normal) var(--ease-out),
               width var(--duration-normal) var(--ease-out),
-              opacity var(--duration-fast) ease, border-color var(--duration-slow);
+              transform var(--duration-normal) var(--ease-drawer),
+              opacity var(--duration-fast) ease;
 }
 
 .app.sidebar-collapsed .sidebar {
@@ -41,9 +45,10 @@
 
 .sidebar-label {
   padding: var(--space-2) var(--space-4) var(--space-1);
+  font-family: var(--font-mono);
   font-size: 12px;
-  font-weight: 600;
-  letter-spacing: .04em;
+  font-weight: 500;
+  letter-spacing: .06em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
@@ -51,6 +56,7 @@
 .history-list {
   flex: 1;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: var(--space-1) var(--space-2) var(--space-2);
   display: flex;
   flex-direction: column;
@@ -60,6 +66,7 @@
 .sidebar-bottom {
   border-top: 1px solid var(--border);
   padding: var(--space-2);
+  padding-bottom: calc(var(--space-2) + env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -82,19 +89,20 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
+  padding-top: max(var(--space-3), env(safe-area-inset-top, 0px));
   border-bottom: 1px solid transparent;
+  transition: border-color var(--duration-fast) ease;
 }
 
 .app.scrolled .main-header {
   border-bottom-color: var(--border);
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(8px);
 }
 
 .chat-scroll {
   flex: 1;
   overflow-y: auto;
-  scroll-behavior: auto; /* JS drives the smooth glide so it can be cancelled/retargeted */
+  overscroll-behavior: contain;
+  scroll-behavior: auto; /* JS drives the glide so it can be cancelled/retargeted */
 }
 
 .chat-column {
@@ -111,8 +119,9 @@
 
 .composer-wrap {
   flex: 0 0 auto;
-  padding: 0 var(--space-5) var(--space-5);
-  background: linear-gradient(to top, var(--bg) 55%, transparent);
+  padding: 0 var(--space-5);
+  padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+  background: var(--bg);
 }
 
 .composer {
@@ -125,16 +134,15 @@
   align-items: flex-end;
   gap: var(--space-2);
   background: var(--surface-2);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   padding: var(--space-2);
-  transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease,
-              background var(--duration-slow);
+  transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
 }
 
 .composer-box:focus-within {
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px var(--accent-soft);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 .composer-box.drag-over {
   border-color: var(--accent);
@@ -172,37 +180,46 @@
   right: 0;
   bottom: 0;
   width: min(420px, 100vw);
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   background: var(--surface);
   border-left: 1px solid var(--border);
-  box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
-  transition: transform var(--duration-normal) var(--ease-spring), background var(--duration-slow);
+  visibility: hidden; /* keeps the closed drawer out of the tab order */
+  transition: transform var(--duration-slow) var(--ease-drawer),
+              visibility 0s linear var(--duration-slow);
   z-index: 31;
 }
 
 .app.settings-open .settings-panel {
   transform: translateX(0);
+  visibility: visible;
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--duration-slow) var(--ease-drawer), visibility 0s;
 }
 
 .settings-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-4) var(--space-5);
+  padding: var(--space-3) var(--space-5);
   border-bottom: 1px solid var(--border);
 }
 
 .settings-header h2 {
   margin: 0;
-  font-size: 17px;
-  font-family: var(--font-display);
+  font-size: 18px;
+  font-stretch: 110%;
+  font-weight: 700;
 }
 
 .settings-form {
   flex: 1;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: var(--space-5);
   display: flex;
   flex-direction: column;
@@ -237,4 +254,5 @@
     box-shadow: none;
   }
   .chat-column { padding-inline: var(--space-3); }
+  .composer-wrap { padding-inline: var(--space-3); }
 }

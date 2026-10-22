@@ -14,6 +14,9 @@
   --accent-hover: #075985;
   --accent-ink: #ffffff;
   --accent-soft: rgb(3 105 161 / 0.08);
+  --ok: #15803d;
+  --warn: #b45309;
+  --danger: #b91c1c;
 
   --font-sans: "Archivo", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -39,6 +42,9 @@
     --accent-hover: #6ccaff;
     --accent-ink: #04121c;
     --accent-soft: rgb(53 180 249 / 0.1);
+    --ok: #4ade80;
+    --warn: #fbbf24;
+    --danger: #f87171;
     color-scheme: dark;
   }
 }
@@ -54,6 +60,9 @@
   --accent-hover: #6ccaff;
   --accent-ink: #04121c;
   --accent-soft: rgb(53 180 249 / 0.1);
+  --ok: #4ade80;
+  --warn: #fbbf24;
+  --danger: #f87171;
   color-scheme: dark;
 }
 
@@ -795,6 +804,79 @@ html:not(.js) .copy-btn { display: none; }
 }
 .site-footer a { text-underline-offset: 3px; }
 
+/* ---------- Tool pages (Minesweeper, Newton solver) ---------- */
+.app-head { padding-top: 40px; padding-bottom: 32px; }
+@media (min-width: 960px) { .app-head { padding-top: 56px; } }
+
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+.crumbs a { text-underline-offset: 3px; }
+.crumbs [aria-current] { color: var(--text); }
+
+.app-head h1 {
+  margin-top: 20px;
+  font-size: clamp(2.25rem, 1.5rem + 3vw, 3.5rem);
+  font-stretch: 112%;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.app-head .lede { margin-top: 16px; font-size: 1.0625rem; }
+.app-head .link-arrow { margin-top: 8px; }
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  min-height: 52px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.panel-body { padding: 20px; }
+
+/* Segmented control: a row of toggle buttons with aria-pressed. */
+.segmented {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+}
+.segmented button {
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.segmented button[aria-pressed="true"] {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 0 0 1px var(--line-strong);
+}
+.segmented small {
+  margin-left: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
 /* ---------- Hover: precise pointers only ---------- */
 @media (hover: hover) and (pointer: fine) {
   .nav-links a:hover { color: var(--text); }
@@ -817,6 +899,8 @@ html:not(.js) .copy-btn { display: none; }
   .email:hover { text-decoration-color: var(--accent); }
   .copy-btn:hover { border-color: var(--text); }
   .elsewhere a:hover { color: var(--accent); }
+  .crumbs a:hover { color: var(--text); }
+  .segmented button:not([aria-pressed="true"]):hover { color: var(--text); }
 }
 
 /* ---------- Reduced motion: keep fades, drop movement ---------- */

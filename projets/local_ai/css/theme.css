@@ -1,98 +1,90 @@
 /* ════════════════════════════════════════════════════════════════════════
-   Design tokens — single source of truth for color, spacing, radius and
-   motion. Swapping [data-theme] on <html> repaints the whole app because
-   every other stylesheet only ever reads these custom properties.
+   Design tokens. Colours match the rest of the portfolio (assets/site.css);
+   the other stylesheets only read these custom properties, so swapping
+   [data-theme] on <html> repaints the whole app.
    ════════════════════════════════════════════════════════════════════════ */
 
 :root,
-[data-theme="dark"] {
-  color-scheme: dark;
-
-  /* Surfaces, darkest → lightest */
-  --bg:            #020713;
-  --surface:       #060d1c;   /* sidebar, header, composer            */
-  --surface-2:     #0b1526;   /* assistant bubble, inputs, cards      */
-  --surface-3:     #101e33;   /* history items, hover states          */
-  --surface-raised:#13233c;   /* user bubble                           */
-  --overlay:       rgba(0, 0, 0, 0.55);
-
-  /* Text */
-  --text-primary:   #ececec;
-  --text-secondary: #b4b4b4;
-  --text-muted:     #8a8a8a;
-  --text-on-accent: #ffffff;
-
-  /* Borders / separators */
-  --border:        rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.16);
-
-  /* Accent (gradient pair used for the assistant avatar / focus rings) */
-  --accent:       #35b4f9;
-  --accent-alt:   #7dd3fc;
-  --accent-soft:  rgba(53, 180, 249, 0.16);
-
-  /* Status */
-  --success: #3fb950;
-  --danger:  #f85149;
-  --danger-soft: rgba(248, 81, 73, 0.14);
-
-  /* Code blocks stay dark in both themes — matches the way most chat UIs
-     keep syntax highlighting legible regardless of the surrounding theme. */
-  --code-bg:   #0d0d0d;
-  --code-text: #cdd6f4;
-  --hljs-theme-href: "https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-dark.min.css";
-
-  /* Shadows / elevation */
-  --shadow-color: rgba(0, 0, 0, 0.45);
-  --shadow-sm: 0 2px 10px var(--shadow-color);
-  --shadow-md: 0 8px 28px var(--shadow-color);
-  --shadow-lg: 0 18px 48px var(--shadow-color);
-}
-
 [data-theme="light"] {
   color-scheme: light;
 
-  --bg:             #cbd5e1;
-  --surface:        #f4f7fa;
-  --surface-2:      #e7edf3;
-  --surface-3:      #dde5ee;
-  --surface-raised: #e2ecf7;
-  --overlay:        rgba(2, 7, 19, 0.35);
+  /* Surfaces */
+  --bg:             #f7f7f5;
+  --surface:        #ffffff;   /* sidebar, drawer                     */
+  --surface-2:      #ffffff;   /* assistant bubble, inputs, composer  */
+  --surface-3:      #eef0f2;   /* hover states, inline code           */
+  --surface-raised: #e7f0f6;   /* user bubble                          */
+  --overlay:        rgb(15 18 22 / 0.4);
 
-  --text-primary:   #11181c;
-  --text-secondary: #4c5a66;
-  --text-muted:     #7b8a98;
+  /* Text */
+  --text-primary:   #0f1216;
+  --text-secondary: #3d444d;
+  --text-muted:     #545c66;
   --text-on-accent: #ffffff;
 
-  --border:        rgba(2, 7, 19, 0.10);
-  --border-strong: rgba(2, 7, 19, 0.18);
+  /* Lines */
+  --border:        #dfe2e5;
+  --border-strong: #c3c8ce;
 
-  --accent:      #0d7acc;
-  --accent-alt:  #38bdf8;
-  --accent-soft: rgba(13, 122, 204, 0.12);
+  /* Accent */
+  --accent:       #0369a1;
+  --accent-hover: #075985;
+  --accent-soft:  rgb(3 105 161 / 0.1);
 
-  --success: #1a7f37;
-  --danger:  #cf222e;
-  --danger-soft: rgba(207, 34, 46, 0.10);
+  /* Status */
+  --success:     #15803d;
+  --danger:      #b91c1c;
+  --danger-soft: rgb(185 28 28 / 0.08);
 
-  --code-bg:   #1e1e1e;
+  /* Code blocks stay dark in both themes, so one highlight.js theme fits. */
+  --code-bg:   #16191d;
   --code-text: #d4d4d4;
-  --hljs-theme-href: "https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-light.min.css";
+  --hljs-theme-href: "https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-dark.min.css";
 
-  --shadow-color: rgba(2, 7, 19, 0.16);
-  --shadow-sm: 0 2px 10px var(--shadow-color);
-  --shadow-md: 0 8px 28px var(--shadow-color);
-  --shadow-lg: 0 18px 48px var(--shadow-color);
+  --shadow-lg: 0 16px 40px rgb(15 18 22 / 0.14);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg:             #0b0d10;
+  --surface:        #12151a;
+  --surface-2:      #12151a;
+  --surface-3:      #1c2129;
+  --surface-raised: #142231;
+  --overlay:        rgb(0 0 0 / 0.55);
+
+  --text-primary:   #e9ebee;
+  --text-secondary: #c2c8cf;
+  --text-muted:     #9aa3ad;
+  --text-on-accent: #04121c;
+
+  --border:        #232830;
+  --border-strong: #353c47;
+
+  --accent:       #35b4f9;
+  --accent-hover: #6ccaff;
+  --accent-soft:  rgb(53 180 249 / 0.12);
+
+  --success:     #4ade80;
+  --danger:      #f87171;
+  --danger-soft: rgb(248 113 113 / 0.12);
+
+  --code-bg:   #0d1014;
+  --code-text: #d4d4d4;
+  --hljs-theme-href: "https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-dark.min.css";
+
+  --shadow-lg: 0 16px 40px rgb(0 0 0 / 0.5);
 }
 
 :root {
-  /* Radii — three sizes, used everywhere */
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
   --radius-pill: 999px;
 
-  /* Spacing — 4px grid */
+  /* Spacing, 4px grid */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -103,15 +95,14 @@
 
   /* Motion */
   --duration-fast:   140ms;
-  --duration-normal: 240ms;
-  --duration-slow:   420ms;
-  --ease-out: cubic-bezier(.22, .61, .36, 1);
-  --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+  --duration-normal: 220ms;
+  --duration-slow:   300ms;
+  --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 
   /* Typography */
-  --font-sans: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
-  --font-display: "Chakra Petch", "IBM Plex Sans", sans-serif;
-  --font-mono: "JetBrains Mono", "Cascadia Code", "Fira Code", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-sans: "Archivo", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --sidebar-width: 280px;
   --sidebar-width-collapsed: 0px;
@@ -119,8 +110,13 @@
 
 * { box-sizing: border-box; }
 
-html, body {
-  height: 100%;
+html, body { height: 100%; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
 }
 
 body {
@@ -129,17 +125,23 @@ body {
   background: var(--bg);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
-  /* Smoothly cross-fade every surface/text color when the theme flips */
-  transition: background var(--duration-slow) var(--ease-out),
-              color var(--duration-slow) var(--ease-out);
+  overscroll-behavior: none;
+}
+
+button, a, [role="button"] { touch-action: manipulation; }
+button { -webkit-user-select: none; user-select: none; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 ::selection {
-  background: var(--accent-soft);
-  color: var(--text-primary);
+  background: var(--accent);
+  color: var(--text-on-accent);
 }
 
-/* Scrollbars — slim, theme-aware, unobtrusive (mirrors the Qt QSS rules) */
+/* Slim, theme-aware scrollbars */
 * { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
 *::-webkit-scrollbar { width: 8px; height: 8px; }
 *::-webkit-scrollbar-track { background: transparent; }

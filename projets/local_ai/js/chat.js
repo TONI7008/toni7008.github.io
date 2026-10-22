@@ -148,6 +148,7 @@ class ChatController {
     this.els.sendBtn.classList.toggle('is-busy', busy);
     this.els.sendBtn.innerHTML = busy ? STOP_ICON : SEND_ICON;
     this.els.sendBtn.title = busy ? 'Stop generating' : 'Send message';
+    this.els.sendBtn.setAttribute('aria-label', this.els.sendBtn.title);
     this.els.sendBtn.disabled = false;
     if (!busy) this.syncSendEnabled();
   }
@@ -393,7 +394,7 @@ class ChatController {
       this.els.modelLabel.textContent = model;
     } catch (err) {
       this.els.statusDot.className = 'status-dot offline';
-      this.els.modelLabel.textContent = err?.message || 'Offline — check Settings';
+      this.els.modelLabel.textContent = err?.message || 'Offline. Check Settings.';
     }
   }
 }

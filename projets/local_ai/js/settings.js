@@ -11,7 +11,9 @@
  * ════════════════════════════════════════════════════════════════════════ */
 
 const ThemeManager = (() => {
-  const STORAGE_KEY = 'chatgui.theme';
+  // Shared with the rest of the portfolio, so the theme follows you between pages.
+  const STORAGE_KEY = 'portfolioTheme';
+  const LEGACY_KEY = 'chatgui.theme';
   const root = document.documentElement;
   let current = 'dark';
 
@@ -33,6 +35,8 @@ const ThemeManager = (() => {
   function set(theme, { persist = true } = {}) {
     current = theme === 'light' ? 'light' : 'dark';
     root.setAttribute('data-theme', current);
+    const bg = getComputedStyle(root).getPropertyValue('--bg').trim();
+    document.querySelectorAll('meta[name="theme-color"]').forEach((m) => m.setAttribute('content', bg));
     applyHljsStylesheet();
     syncToggleUi();
     if (persist) {
@@ -42,7 +46,7 @@ const ThemeManager = (() => {
 
   function init() {
     let stored = null;
-    try { stored = localStorage.getItem(STORAGE_KEY); } catch { /* storage unavailable */ }
+    try { stored = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(LEGACY_KEY); } catch { /* storage unavailable */ }
 
     if (stored === 'light' || stored === 'dark') {
       set(stored, { persist: false });
@@ -52,7 +56,12 @@ const ThemeManager = (() => {
     }
   }
 
-  function toggle() { set(current === 'dark' ? 'light' : 'dark'); }
+  function toggle() {
+    const next = current === 'dark' ? 'light' : 'dark';
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+    if (document.startViewTransition && !reduce) document.startViewTransition(() => set(next));
+    else set(next);
+  }
 
   return { init, toggle, set, get: () => current };
 })();
@@ -251,7 +260,7 @@ class SettingsPanel {
       this.els.loadModelBtn.disabled = true;
       this.els.loadModelBtn.textContent = 'Loading…';
       this.els.modelStatusDot.className = 'status-dot pending';
-      this.els.modelStatusText.textContent = 'Loading model — this can take a while for large models…';
+      this.els.modelStatusText.textContent = 'Loading model. Large models can take a minute…';
 
       try {
         await probe.loadModel(id, info.type);
@@ -259,7 +268,7 @@ class SettingsPanel {
         if (details.size) this.modelDetails = details;
         this._refreshModelStatus();
         if (this.modelDetails.get(id)?.state !== 'loaded') {
-          this._setStatus(`Sent a load request for "${id}" — recheck status if it's still showing as not loaded.`, 'ok');
+          this._setStatus(`Asked the server to load "${id}". If it still shows as not loaded, fetch the models again.`, 'ok');
         }
       } catch (err) {
         this._refreshModelStatus();
@@ -275,7 +284,7 @@ class SettingsPanel {
 
     const placeholder = document.createElement('option');
     placeholder.value = '';
-    placeholder.textContent = `${models.length} model${models.length === 1 ? '' : 's'} found — choose one…`;
+    placeholder.textContent = `${models.length} model${models.length === 1 ? '' : 's'} found. Choose one…`;
     select.append(placeholder);
 
     for (const model of models) {
