@@ -305,7 +305,7 @@ class SettingsPanel {
       const settings = this._readForm();
 
       if (!settings.serverIp) {
-        this._setStatus('Server address is required.', 'fail');
+        this._setStatus('Enter a server address.', 'fail');
         this.els.serverIp.focus();
         return;
       }

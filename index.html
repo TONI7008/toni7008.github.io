@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Igor Tagne · Computer engineering</title>
-<meta name="description" content="Igor Tagne, computer engineering student at UQO. Projects include a bomb-disposal robot driven by hand gestures, an FPGA infant monitor, board-game AIs in C++/Qt and tools that run in the browser.">
+<meta name="description" content="Igor Tagne, computer engineering student at UQO. Projects include a gesture-controlled bomb-disposal robot, an FPGA infant monitor, board-game AIs in C++/Qt and tools that run in the browser.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0b0d10" media="(prefers-color-scheme: dark)">
@@ -67,7 +67,7 @@
     <div>
       <p class="label hero-in">Computer engineering student, UQO</p>
       <h1 id="hero-title" class="hero-in" style="--i:1">Igor Tagne</h1>
-      <p class="lede hero-in" style="--i:2">I build embedded systems and the software that talks to them. Recent work: a bomb-disposal robot you drive with hand gestures, an FPGA-based infant monitor, and three tools that run in your browser.</p>
+      <p class="lede hero-in" style="--i:2">I build embedded systems and the software that talks to them. Recent work includes a bomb-disposal robot you drive with hand gestures and an FPGA-based infant monitor.</p>
       <div class="hero-actions hero-in" style="--i:3">
         <a class="btn btn-primary" href="#work">
           See the projects
@@ -114,9 +114,9 @@
       <div>
         <p class="label">Robotics · Python, Rust, C++</p>
         <h3 id="sentinel-title">Sentinel V1</h3>
-        <p class="sub">Bomb-disposal robot driven by hand gestures (GEN 1973, UQO)</p>
-        <p class="desc">A tracked robot with a six-axis arm and a wire cutter. The operator drives it with bare hands in front of a webcam. MediaPipe tracks both hands: a pinch moves the arm, a V sign works the cutter, and an open palm from the other hand stops everything. A game controller works too.</p>
-        <p class="desc">The station sends commands over UDP to a Raspberry Pi 5, which runs inverse kinematics and jerk-limited trajectories in Rust at 50 Hz. An Arduino Mega drives the servos and tracks. While the hardware is being built, the same chain runs against a PyBullet simulator, and a parity test checks the Rust code against the Python simulator.</p>
+        <p class="sub">Gesture-controlled bomb-disposal robot (GEN 1973, UQO)</p>
+        <p class="desc">A tracked robot with a six-axis arm and a wire cutter. The operator drives it with bare hands in front of a webcam. MediaPipe tracks both hands: a pinch moves the arm, a V sign works the cutter, and an open palm from the other hand stops all motion. A game controller works too.</p>
+        <p class="desc">The station sends commands over UDP to a Raspberry Pi 5, which runs inverse kinematics and jerk-limited trajectories in Rust at 50 Hz. An Arduino Mega drives the servos and tracks. Until the hardware is ready, the same chain runs against a PyBullet simulator, and a parity test checks that the Rust code computes the same setpoints as the simulator's Python code.</p>
         <ul class="tags" role="list" translate="no">
           <li>Python</li><li>MediaPipe</li><li>Rust</li><li>C++</li><li>PyBullet</li><li>Blender</li><li>three.js</li>
         </ul>
@@ -127,7 +127,7 @@
       </div>
       <div class="chain-wrap">
         <span class="label">Command path</span>
-        <div class="chain" role="img" aria-label="The operator station sends commands over UDP to the Raspberry Pi 5, which sends setpoints over USB to the Arduino Mega, which drives the arm servos and the tracks.">
+        <div class="chain" role="img" aria-label="Command path: operator station to Raspberry Pi 5 over UDP, then to the Arduino Mega over USB, then to the servos and tracks.">
           <div class="node"><b>Station</b><small>Python</small></div>
           <div class="link"><span>UDP</span></div>
           <div class="node"><b>Raspberry Pi 5</b><small>Rust</small></div>
@@ -150,7 +150,7 @@
       <div>
         <p class="label">Hardware · FPGA + ESP32</p>
         <h3 id="wtb-title">Watch The Baby</h3>
-        <p class="sub">Infant monitor built to help prevent SIDS</p>
+        <p class="sub">Infant monitor for SIDS prevention</p>
         <p class="desc">A monitor for newborns up to one month old. Six sensors track heart rate and SpO₂, body temperature, room temperature and humidity, motion, crying, and gas or smoke.</p>
         <p class="desc">The DE1-SoC FPGA handles real-time sensor processing and talks to an ESP32 over UART. The ESP32 reads the biometric sensors and uploads to Firebase, and the caregiver's phone app raises an alert when a reading goes out of range.</p>
         <p class="parts" translate="no"><span class="label">Parts</span>DHT11, KY-037, HC-SR501, MQ-2, MAX30102, MLX90614, fan, buzzer</p>
@@ -164,7 +164,7 @@
       </div>
       <div class="chain-wrap">
         <span class="label">Data path</span>
-        <div class="chain" role="img" aria-label="Sensors feed the DE1-SoC FPGA, which sends data over UART to the ESP32, which uploads over Wi-Fi to Firebase, which feeds the phone app.">
+        <div class="chain" role="img" aria-label="Data path: sensors to the DE1-SoC FPGA, then to the ESP32 over UART, then over Wi-Fi to Firebase and the phone app.">
           <div class="node"><b>6 sensors</b></div>
           <div class="link"></div>
           <div class="node"><b>DE1-SoC</b><small>VHDL</small></div>
@@ -201,7 +201,7 @@
         <h3>B.Eng. Computer Engineering</h3>
         <p class="school">Université du Québec en Outaouais</p>
         <p class="label years">2022 – present</p>
-        <p class="focus">Specializing in machine learning, RF systems and embedded design, with a focus on digital signal processing, FPGA design and hardware/software co-design.</p>
+        <p class="focus">Specializing in machine learning, RF systems and embedded design. Focus areas: digital signal processing, FPGA design and hardware/software co-design.</p>
         <div class="spoken">
           <p class="label">Spoken languages</p>
           <p>French (fluent), English (intermediate)</p>

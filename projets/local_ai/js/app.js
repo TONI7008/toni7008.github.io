@@ -91,7 +91,7 @@
 
   document.getElementById('clearHistoryBtn')?.addEventListener('click', () => {
     if (!SessionStore.list().length) return;
-    if (!window.confirm('Delete all saved chats? This cannot be undone.')) return;
+    if (!window.confirm('Delete all saved chats? You can\'t undo this.')) return;
     SessionStore.clearAll();
     chat.newChat();
   });
