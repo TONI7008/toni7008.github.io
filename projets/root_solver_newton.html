@@ -11,9 +11,11 @@
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <script>
   // Set the theme before first paint so the page never flashes the wrong one.
+  // It follows the system. The theme button's choice lasts for this tab only.
   (function () {
     var root = document.documentElement, theme = null;
-    try { theme = localStorage.getItem('portfolioTheme'); } catch (e) {}
+    try { localStorage.removeItem('portfolioTheme'); } catch (e) {} // old copy that never expired
+    try { theme = sessionStorage.getItem('portfolioTheme'); } catch (e) {}
     if (theme !== 'light' && theme !== 'dark') {
       theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
@@ -25,11 +27,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=JetBrains+Mono:wght@400..600&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
-<link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="../assets/site.css?v=2">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.0.0/math.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" defer></script>
-<script src="../assets/site.js" defer></script>
+<script src="../assets/site.js?v=3" defer></script>
 <style>
   .nw { display: flex; flex-direction: column; gap: 20px; padding-bottom: 72px; }
   .nw-grid { display: grid; gap: 20px; }
@@ -234,7 +236,7 @@
     <a class="brand" href="../index.html" translate="no">toni<span>.dev</span></a>
     <nav aria-label="Main">
       <ul class="nav-links" role="list">
-        <li><a href="index.html">Work</a></li>
+        <li><a href="index.html">Projects</a></li>
         <li><a href="../index.html#about">About</a></li>
         <li><a href="index.html#contact">Contact</a></li>
       </ul>

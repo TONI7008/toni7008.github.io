@@ -442,6 +442,26 @@ html:not(.js) .theme-toggle { display: none; }
   height: 100%;
   object-fit: cover;
 }
+a.media { position: relative; display: block; }
+a.media img { transition: transform 300ms var(--ease-out); }
+/* Tells visitors the picture opens the 3D tour. */
+.media-badge {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text);
+  transition: color 150ms ease, border-color 150ms ease;
+}
+.feature .sub + .btn { margin-top: 20px; }
 
 .feature h3 {
   margin-top: 12px;
@@ -526,6 +546,7 @@ html:not(.js) .theme-toggle { display: none; }
   transform: translateY(-50%);
   font-size: 0.75rem;
   color: var(--accent);
+  white-space: nowrap;
 }
 
 @media (min-width: 900px) {
@@ -891,7 +912,10 @@ html:not(.js) .copy-btn { display: none; }
   .link-arrow:hover .icon-arrow { transform: translateX(2px); }
   .card:hover .card-actions .link-arrow .icon-arrow { transform: translateX(2px); }
   .card:hover { border-color: var(--line-strong); }
-  .card:hover .media img { transform: scale(1.025); }
+  .card:hover .media img,
+  a.media:hover img { transform: scale(1.025); }
+  a.media:hover { border-color: var(--line-strong); }
+  a.media:hover .media-badge { color: var(--accent); border-color: var(--accent); }
   .card:hover h3 { color: var(--accent); }
   .card:hover .card-actions .link-arrow .icon-out { transform: translate(2px, -2px); }
   .card-actions .secondary:hover { color: var(--text); }
@@ -914,9 +938,11 @@ html:not(.js) .copy-btn { display: none; }
   .theme-toggle:active,
   .card:active { transform: none; }
   .card .media img,
+  a.media img,
   .btn .icon,
   .link-arrow .icon { transition: none; }
-  .card:hover .media img { transform: none; }
+  .card:hover .media img,
+  a.media:hover img { transform: none; }
   .theme-toggle > svg,
   .copy-icons svg { transform: none !important; }
 }

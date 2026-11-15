@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════════════════════════════════════
- * ThemeManager — dark/light switcheroo, persisted, with the highlight.js
+ * ThemeManager — dark/light, following the system, with the highlight.js
  * stylesheet swapped to match (the one piece of UI that can't be themed
  * with custom properties alone, since it ships as a full CSS file).
  *
@@ -11,9 +11,10 @@
  * ════════════════════════════════════════════════════════════════════════ */
 
 const ThemeManager = (() => {
-  // Shared with the rest of the portfolio, so the theme follows you between pages.
+  // The theme follows the system. The toggle's choice lasts for this tab only
+  // (sessionStorage), under the key every page of the portfolio reads, and a
+  // change of the system setting drops it.
   const STORAGE_KEY = 'portfolioTheme';
-  const LEGACY_KEY = 'chatgui.theme';
   const root = document.documentElement;
   let current = 'dark';
 
@@ -40,20 +41,25 @@ const ThemeManager = (() => {
     applyHljsStylesheet();
     syncToggleUi();
     if (persist) {
-      try { localStorage.setItem(STORAGE_KEY, current); } catch { /* storage unavailable */ }
+      try { sessionStorage.setItem(STORAGE_KEY, current); } catch { /* storage unavailable */ }
     }
   }
 
   function init() {
     let stored = null;
-    try { stored = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(LEGACY_KEY); } catch { /* storage unavailable */ }
+    try { stored = sessionStorage.getItem(STORAGE_KEY); } catch { /* storage unavailable */ }
 
+    const system = window.matchMedia?.('(prefers-color-scheme: light)');
     if (stored === 'light' || stored === 'dark') {
       set(stored, { persist: false });
     } else {
-      const prefersLight = window.matchMedia?.('(prefers-color-scheme: light)')?.matches;
-      set(prefersLight ? 'light' : 'dark', { persist: false });
+      set(system?.matches ? 'light' : 'dark', { persist: false });
     }
+
+    system?.addEventListener('change', (event) => {
+      try { sessionStorage.removeItem(STORAGE_KEY); } catch { /* storage unavailable */ }
+      set(event.matches ? 'light' : 'dark', { persist: false });
+    });
   }
 
   function toggle() {

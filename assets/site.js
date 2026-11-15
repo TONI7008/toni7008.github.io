@@ -3,16 +3,14 @@
 // only handles changes after load.
 (() => {
   const root = document.documentElement;
-  // Same key the Minesweeper and Newton Solver pages read.
+  // The theme follows the system. The toggle's choice lasts for this tab only
+  // (sessionStorage), and a change of the system setting drops it. Every page
+  // reads the same key: Minesweeper, the Newton solver, the chat, Sentinel V1.
   const THEME_KEY = 'portfolioTheme';
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const darkScheme = matchMedia('(prefers-color-scheme: dark)');
   const toggle = document.querySelector('.theme-toggle');
   const themeMetas = document.querySelectorAll('meta[name="theme-color"]');
-
-  function storedTheme() {
-    try { return localStorage.getItem(THEME_KEY); } catch { return null; }
-  }
 
   function applyTheme(theme) {
     root.dataset.theme = theme;
@@ -25,9 +23,28 @@
 
   applyTheme(root.dataset.theme === 'dark' ? 'dark' : 'light');
 
+  // Links to the Sentinel V1 tour carry the toggle's choice (?theme=), so the
+  // tour opens in it even in a new tab, where sessionStorage starts empty.
+  // The tour reads the parameter, keeps it for its tab and drops it from the URL.
+  const tourLinks = document.querySelectorAll('a[href*="sentinel_v1/"]');
+  let chosen = null;
+  try { chosen = sessionStorage.getItem(THEME_KEY); } catch {}
+
+  function syncTourLinks() {
+    tourLinks.forEach(link => {
+      const url = new URL(link.href);
+      if (chosen === 'light' || chosen === 'dark') url.searchParams.set('theme', chosen);
+      else url.searchParams.delete('theme');
+      link.href = url.href;
+    });
+  }
+  syncTourLinks();
+
   toggle?.addEventListener('click', () => {
     const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-    try { localStorage.setItem(THEME_KEY, next); } catch {}
+    chosen = next;
+    try { sessionStorage.setItem(THEME_KEY, next); } catch {}
+    syncTourLinks();
     if (document.startViewTransition && !reduceMotion.matches) {
       document.startViewTransition(() => applyTheme(next));
     } else {
@@ -35,10 +52,12 @@
     }
   });
 
-  // Follow the OS setting until the visitor picks a theme themselves.
+  // The system setting changed: drop the toggle's choice and follow it.
   darkScheme.addEventListener('change', event => {
-    const saved = storedTheme();
-    if (saved !== 'light' && saved !== 'dark') applyTheme(event.matches ? 'dark' : 'light');
+    chosen = null;
+    try { sessionStorage.removeItem(THEME_KEY); } catch {}
+    syncTourLinks();
+    applyTheme(event.matches ? 'dark' : 'light');
   });
 
   // Scroll reveal, once per element.

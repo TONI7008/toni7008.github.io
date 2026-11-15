@@ -14,9 +14,11 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <script>
   // Set the theme before first paint so the page never flashes the wrong one.
+  // It follows the system. The theme button's choice lasts for this tab only.
   (function () {
     var root = document.documentElement, theme = null;
-    try { theme = localStorage.getItem('portfolioTheme'); } catch (e) {}
+    try { localStorage.removeItem('portfolioTheme'); } catch (e) {} // old copy that never expired
+    try { theme = sessionStorage.getItem('portfolioTheme'); } catch (e) {}
     if (theme !== 'light' && theme !== 'dark') {
       theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
@@ -27,8 +29,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=JetBrains+Mono:wght@400..600&display=swap">
-<link rel="stylesheet" href="assets/site.css">
-<script src="assets/site.js" defer></script>
+<link rel="stylesheet" href="assets/site.css?v=2">
+<script src="assets/site.js?v=3" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -42,6 +44,7 @@
   <symbol id="i-linkedin" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-rotate-3d" viewBox="0 0 24 24"><path d="M16.466 7.5C15.643 4.237 13.952 2 12 2 9.239 2 7 6.477 7 12s2.239 10 5 10c.342 0 .677-.069 1-.2"/><path d="m15.194 13.707 3.814 1.86-1.86 3.814"/><path d="M19 15.57c-1.804.885-4.274 1.43-7 1.43-5.523 0-10-2.239-10-5s4.477-5 10-5c4.838 0 8.873 1.718 9.8 4"/></symbol>
 </svg>
 
 <header class="site-header">
@@ -49,7 +52,7 @@
     <a class="brand" href="index.html" translate="no">toni<span>.dev</span></a>
     <nav aria-label="Main">
       <ul class="nav-links" role="list">
-        <li><a href="#work">Work</a></li>
+        <li><a href="#projects">Projects</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -69,7 +72,7 @@
       <h1 id="hero-title" class="hero-in" style="--i:1">Igor Tagne</h1>
       <p class="lede hero-in" style="--i:2">I build embedded systems and the software that talks to them. Recent work includes a bomb-disposal robot you drive with hand gestures and an FPGA-based infant monitor.</p>
       <div class="hero-actions hero-in" style="--i:3">
-        <a class="btn btn-primary" href="#work">
+        <a class="btn btn-primary" href="#projects">
           See the projects
           <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
         </a>
@@ -83,20 +86,20 @@
     <aside class="spec hero-in" style="--i:4" aria-label="Summary">
       <span class="label">Summary</span>
       <dl>
-        <div><dt>Degree</dt><dd>B.Eng. Computer Engineering, Université du Québec en Outaouais, 2022–present</dd></div>
+        <div><dt>Degree</dt><dd>B.Eng. Computer Engineering, Université du Québec en Outaouais, 2024–present</dd></div>
         <div><dt>Focus</dt><dd>Embedded systems, RF, signal processing, machine learning</dd></div>
-        <div><dt>Code</dt><dd translate="no">C, C++, Python, Rust, VHDL</dd></div>
+        <div><dt>Code</dt><dd translate="no">C, C++, Python, Rust, Java, VHDL</dd></div>
         <div><dt>Buses</dt><dd translate="no">UART, SPI, I²C, CAN</dd></div>
-        <div><dt>Boards</dt><dd translate="no">DE1-SoC (Cyclone V), ESP32</dd></div>
+        <div><dt>Boards</dt><dd translate="no">DE1-SoC (Cyclone V), ESP32, STM32</dd></div>
         <div><dt>Speaks</dt><dd>French, English</dd></div>
       </dl>
     </aside>
   </section>
 
-  <section id="work" class="section wrap" aria-labelledby="work-title">
+  <section id="projects" class="section wrap" aria-labelledby="projects-title">
     <div class="section-head reveal">
       <span class="section-num">01</span>
-      <h2 id="work-title">Selected work</h2>
+      <h2 id="projects-title">Projects</h2>
       <a class="link-arrow" href="projets/index.html">
         All projects
         <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
@@ -104,32 +107,37 @@
     </div>
 
     <article class="feature reveal" aria-labelledby="sentinel-title">
-      <figure class="media">
-        <img src="Images/projects/sentinel-v1-640.webp"
-             srcset="Images/projects/sentinel-v1-640.webp 640w, Images/projects/sentinel-v1-lg.webp 1200w"
+      <a class="media" href="projets/sentinel_v1/index.html" tabindex="-1">
+        <img src="Images/projects/sentinel-v1-tracks-640.webp"
+             srcset="Images/projects/sentinel-v1-tracks-640.webp 640w, Images/projects/sentinel-v1-tracks-lg.webp 1200w"
              sizes="(min-width: 1200px) 536px, (min-width: 900px) 45vw, 100vw"
              width="1200" height="900" loading="lazy" decoding="async"
-             alt="Render of Sentinel V1: a tracked chassis with the electronics, an emergency stop and a radio antenna, and a six-axis arm ending in a wire cutter">
-      </figure>
+             alt="Render of Sentinel V1: a tracked chassis carrying the electronics, a transport tray and a radio antenna, with a five-axis arm whose printed gripper holds a small box">
+        <span class="media-badge">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-rotate-3d"/></svg>
+          Interactive 3D
+        </span>
+      </a>
       <div>
         <p class="label">Robotics · Python, Rust, C++</p>
         <h3 id="sentinel-title">Sentinel V1</h3>
         <p class="sub">Gesture-controlled bomb-disposal robot (GEN 1973, UQO)</p>
-        <p class="desc">A tracked robot with a six-axis arm and a wire cutter. The operator drives it with bare hands in front of a webcam. MediaPipe tracks both hands: a pinch moves the arm, a V sign works the cutter, and an open palm from the other hand stops all motion. A game controller works too.</p>
-        <p class="desc">The station sends commands over UDP to a Raspberry Pi 5, which runs inverse kinematics and jerk-limited trajectories in Rust at 50 Hz. An Arduino Mega drives the servos and tracks. Until the hardware is ready, the same chain runs against a PyBullet simulator, and a parity test checks that the Rust code computes the same setpoints as the simulator's Python code.</p>
-        <ul class="tags" role="list" translate="no">
-          <li>Python</li><li>MediaPipe</li><li>Rust</li><li>C++</li><li>PyBullet</li><li>Blender</li><li>three.js</li>
-        </ul>
-        <a class="link-arrow" href="projets/sentinel_v1/index.html">
+        <a class="btn btn-primary" href="projets/sentinel_v1/index.html">
           Open the 3D tour
           <svg class="icon icon-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
         </a>
+        <p class="desc">A tracked robot with a five-axis arm and a printed gripper. It picks up a suspicious package and sets it down somewhere safe, while the operator drives it with bare hands in front of a webcam. MediaPipe tracks both hands: a pinch moves the arm, a V sign works the jaws, and an open palm from the other hand stops all motion.</p>
+        <p class="desc">The station sends commands over Wi-Fi HaLow to a Raspberry Pi 5, which runs inverse kinematics and jerk-limited trajectories in Rust at 50 Hz. An Arduino Mega drives the servos and tracks. Until the hardware is ready, the arm runs in a MATLAB Simscape Multibody model imported from the CAD assembly, which gives the torque each servo needs along a planned trajectory.</p>
+        <p class="parts" translate="no"><span class="label">Parts</span>Hiwonder tracked chassis, 4× DS3225, MG90S, MG996R, Camera Module 3 and 3 Wide, LUXEON LED, 3S LiPo</p>
+        <ul class="tags" role="list" translate="no">
+          <li>Python</li><li>MediaPipe</li><li>PyQt6</li><li>Rust</li><li>C++</li><li>MATLAB</li><li>Simscape</li><li>Blender</li><li>three.js</li>
+        </ul>
       </div>
       <div class="chain-wrap">
         <span class="label">Command path</span>
-        <div class="chain" role="img" aria-label="Command path: operator station to Raspberry Pi 5 over UDP, then to the Arduino Mega over USB, then to the servos and tracks.">
+        <div class="chain" role="img" aria-label="Command path: operator station to Raspberry Pi 5 over Wi-Fi HaLow, then to the Arduino Mega over USB, then to the servos and tracks.">
           <div class="node"><b>Station</b><small>Python</small></div>
-          <div class="link"><span>UDP</span></div>
+          <div class="link"><span>Wi-Fi HaLow</span></div>
           <div class="node"><b>Raspberry Pi 5</b><small>Rust</small></div>
           <div class="link"><span>USB</span></div>
           <div class="node"><b>Arduino Mega</b><small>C++</small></div>
@@ -200,8 +208,8 @@
         <p class="label">Education</p>
         <h3>B.Eng. Computer Engineering</h3>
         <p class="school">Université du Québec en Outaouais</p>
-        <p class="label years">2022 – present</p>
-        <p class="focus">Specializing in machine learning, RF systems and embedded design. Focus areas: digital signal processing, FPGA design and hardware/software co-design.</p>
+        <p class="label years">2024 – present</p>
+        <p class="focus">Specializing in machine learning, RF systems and embedded design, with a focus on digital signal processing, FPGA design and hardware/software co-design.</p>
         <div class="spoken">
           <p class="label">Spoken languages</p>
           <p>French (fluent), English (intermediate)</p>
@@ -223,7 +231,7 @@
         </div>
         <div>
           <dt class="label">Tools</dt>
-          <dd><ul class="tags" role="list" translate="no"><li>Intel Quartus</li><li>MATLAB</li><li>Arduino IDE</li><li>Qt</li><li>CMake</li><li>Git</li><li>Blender</li><li>PyBullet</li><li>VS Code</li><li>Visual Studio</li></ul></dd>
+          <dd><ul class="tags" role="list" translate="no"><li>Intel Quartus</li><li>MATLAB</li><li>Arduino IDE</li><li>Qt</li><li>CMake</li><li>Git</li><li>Blender</li><li>Simscape Multibody</li><li>VS Code</li><li>Visual Studio</li></ul></dd>
         </div>
         <div>
           <dt class="label">Concepts</dt>

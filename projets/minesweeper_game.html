@@ -11,9 +11,11 @@
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <script>
   // Set the theme before first paint so the page never flashes the wrong one.
+  // It follows the system. The theme button's choice lasts for this tab only.
   (function () {
     var root = document.documentElement, theme = null;
-    try { theme = localStorage.getItem('portfolioTheme'); } catch (e) {}
+    try { localStorage.removeItem('portfolioTheme'); } catch (e) {} // old copy that never expired
+    try { theme = sessionStorage.getItem('portfolioTheme'); } catch (e) {}
     if (theme !== 'light' && theme !== 'dark') {
       theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
@@ -24,8 +26,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=JetBrains+Mono:wght@400..600&display=swap">
-<link rel="stylesheet" href="../assets/site.css">
-<script src="../assets/site.js" defer></script>
+<link rel="stylesheet" href="../assets/site.css?v=2">
+<script src="../assets/site.js?v=3" defer></script>
 <style>
   :root {
     --ms-hidden: #ffffff;
@@ -205,7 +207,7 @@
     <a class="brand" href="../index.html" translate="no">toni<span>.dev</span></a>
     <nav aria-label="Main">
       <ul class="nav-links" role="list">
-        <li><a href="index.html">Work</a></li>
+        <li><a href="index.html">Projects</a></li>
         <li><a href="../index.html#about">About</a></li>
         <li><a href="index.html#contact">Contact</a></li>
       </ul>

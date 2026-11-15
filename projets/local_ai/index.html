@@ -10,11 +10,12 @@
 <meta name="theme-color" content="#0b0d10" media="(prefers-color-scheme: dark)" />
 <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml" />
 <script>
-  // Set the theme before first paint. Same key as the rest of the portfolio;
-  // falls back to the key this app used before.
+  // Set the theme before first paint. It follows the system; the theme
+  // button's choice lasts for this tab only, under the portfolio's key.
   (function () {
     var theme = null;
-    try { theme = localStorage.getItem('portfolioTheme') || localStorage.getItem('chatgui.theme'); } catch (e) {}
+    try { localStorage.removeItem('portfolioTheme'); localStorage.removeItem('chatgui.theme'); } catch (e) {} // old copies that never expired
+    try { theme = sessionStorage.getItem('portfolioTheme'); } catch (e) {}
     if (theme !== 'light' && theme !== 'dark') {
       theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
